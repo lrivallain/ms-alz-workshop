@@ -35,3 +35,19 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# General
+.DS_Store
+.vscode/
+*.suo
+*.user
+*.sln.docstates
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+*.tfstate.lock.info
+.terraform.lock.hcl
