@@ -31,7 +31,7 @@ cd alz-workshop/Workshop-1-Modern-DevOps-IaC-Essentials
 
 ## About the Book
 
-[[Link to your book, e.g., on Amazon or publisher's website](https://www.amazon.fr/Azure-Landing-Zones-Foundations-Fondations-ebook/dp/B0FNQ613PS/ref=sr_1_1)]
+[[Azure Landing Zones: Practical Guide to Cloud Foundations](https://www.amazon.fr/Azure-Landing-Zones-Foundations-Fondations-ebook/dp/B0FNQ613PS/ref=sr_1_1)]
 
 "Azure Landing Zones: Practical Guide to Cloud Foundations" provides a comprehensive guide to designing and implementing robust, scalable, and secure cloud foundations on Microsoft Azure.
 
