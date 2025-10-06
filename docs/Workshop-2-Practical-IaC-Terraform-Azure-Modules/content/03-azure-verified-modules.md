@@ -953,8 +953,6 @@ After mastering Azure Verified Modules:
 4. **Monitoring**: Set up update notifications for modules
 5. **Documentation**: Document your AVM usage patterns
 
-**Ready for the next session**: [Azure DevOps Pipeline Implementation](04-pipeline-automation.md)
-
 ---
 
 *This completes the Azure Verified Modules module. You now understand how to leverage Microsoft's official infrastructure modules to accelerate your deployments while following best practices.*

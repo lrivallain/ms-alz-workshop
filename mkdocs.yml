@@ -47,7 +47,7 @@ extra_css:
   - css/mermaid.css
 
 nav:
-  - Home: /
+  - Home: index.md
   - "Workshop 1 - Modern DevOps & Infrastructure as Code (IaC) Essentials":
     - Overview: Workshop-1-Modern-DevOps-IaC-Essentials/README.md
     - <b>Module 1</b> - DevOps Principles & Value: Workshop-1-Modern-DevOps-IaC-Essentials/content/01-devops-principles.md
