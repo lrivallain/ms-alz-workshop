@@ -1,0 +1,54 @@
+/* Mermaid diagram styling */
+.mermaid {
+    text-align: center;
+    margin: 1em 0;
+    background: transparent;
+}
+
+/* Make Mermaid diagrams responsive */
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ensure diagrams have proper spacing */
+.mermaid .node rect,
+.mermaid .node circle,
+.mermaid .node polygon {
+    fill: #e3f2fd;
+    stroke: #1976d2;
+    stroke-width: 2px;
+}
+
+.mermaid .node .label {
+    color: #1565c0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Flowchart styling */
+.mermaid .flowchart-link {
+    stroke: #1976d2;
+    stroke-width: 2px;
+}
+
+/* Graph styling */
+.mermaid .edge-thickness-normal {
+    stroke-width: 2px;
+}
+
+.mermaid .edge-pattern-solid {
+    stroke-dasharray: 0;
+}
+
+/* Subgraph styling */
+.mermaid .cluster rect {
+    fill: #f5f5f5;
+    stroke: #1976d2;
+    stroke-width: 1px;
+    stroke-dasharray: 5,5;
+}
+
+.mermaid .cluster .label {
+    color: #1565c0;
+    font-weight: bold;
+}

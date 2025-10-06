@@ -1,0 +1,11 @@
+services:
+  docs:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/workspace
+    entrypoint: /bin/sh
+    command: -c "run.sh"
+    environment:
+      - PYTHONUNBUFFERED=1

@@ -1,0 +1,63 @@
+site_name: ALZ Workshop Collection
+site_description: Modern DevOps & Infrastructure as Code Workshops
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - toc.integrate
+    - content.code.copy
+    - content.tabs.link
+
+plugins:
+  - search
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+  - tables
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10.6.0/dist/mermaid.min.js
+  - js/mermaid-init.js
+
+extra_css:
+  - css/mermaid.css
+
+nav:
+  - Home: /
+  - "Workshop 1 - Modern DevOps & Infrastructure as Code (IaC) Essentials":
+    - Overview: Workshop-1-Modern-DevOps-IaC-Essentials/README.md
+    - <b>Module 1</b> - DevOps Principles & Value: Workshop-1-Modern-DevOps-IaC-Essentials/content/01-devops-principles.md
+    - <b>Module 2</b> - Introduction to Infrastructure as Code: Workshop-1-Modern-DevOps-IaC-Essentials/content/02-infrastructure-as-code.md
+    - <b>Module 3</b> - Source Control & Git Workflows: Workshop-1-Modern-DevOps-IaC-Essentials/content/03-source-control-git.md
+    - <b>Module 4</b> - What is Terraform?: Workshop-1-Modern-DevOps-IaC-Essentials/content/04-terraform-basics.md
+    - <b>Module 5</b> - Terraform Modules & AVM: Workshop-1-Modern-DevOps-IaC-Essentials/content/05-terraform-modules-avm.md
+  - "Workshop 2 - Practical IaC—Terraform & Azure Modules":
+    - Overview: Workshop-2-Practical-IaC-Terraform-Azure-Modules/README.md
+    - <b>Module 1</b> - Environment Setup & Validation: Workshop-2-Practical-IaC-Terraform-Azure-Modules/content/01-environment-setup.md
+    - <b>Module 2</b> - Building Basic Terraform Configs: Workshop-2-Practical-IaC-Terraform-Azure-Modules/content/02-terraform-fundamentals.md
+    - <b>Module 3</b> - Using Azure Verified Modules: Workshop-2-Practical-IaC-Terraform-Azure-Modules/content/03-azure-verified-modules.md
+  #- Overview: Workshop-3-Azure-DevOps-Pipeline-Implementation/README.md

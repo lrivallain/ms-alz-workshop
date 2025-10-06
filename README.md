@@ -4,19 +4,16 @@ The workshops provide hands-on exercises to guide you through the practical impl
 
 ## Workshops
 
-This repository is structured into four main workshops:
+This repository is organized into workshops lasting a few hours each:
 
-1.  **Workshop 1: Modern DevOps & IaC Essentials**
+1. **[Workshop 1: Modern DevOps & IaC Essentials](Workshop-1-Modern-DevOps-IaC-Essentials/README.md)**
     - Introduction to Infrastructure as Code (IaC), source control with Git, and modern development workflows.
 
-2.  **Workshop 2: Practical IaC with Terraform & Azure Modules**
+2. **[Workshop 2: Practical IaC with Terraform & Azure Modules](Workshop-2-Practical-IaC-Terraform-Azure-Modules/README.md)**
     - Deep dive into using Terraform for Azure, leveraging Terraform modules for reusability, and managing state.
 
-3.  **Workshop 3: AI for IaC with VS Code & GitHub Copilot**
-    - Enhancing IaC development productivity using AI-powered tools like GitHub Copilot within Visual Studio Code.
-
-4.  **Workshop 4: Advanced Azure Patterns & ALZ**
-    - Implementing advanced Azure architecture patterns, focusing on Azure Landing Zones (ALZ) with Terraform.
+<!-- 3. **[Workshop 3: Azure DevOps Pipeline Implementation](./Workshop-3-Azure-DevOps-Pipeline-Implementation)**
+    - Implementing CI/CD pipelines for automated testing and deployment of infrastructure code. -->
 
 ## Getting Started
 
