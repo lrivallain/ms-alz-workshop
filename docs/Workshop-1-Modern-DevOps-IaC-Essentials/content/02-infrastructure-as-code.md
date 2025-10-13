@@ -136,9 +136,17 @@ graph TD
 
     Let's explore why **organizations are making IaC a strategic priority** - the benefits span technical efficiency, business agility, and risk management.
 
-    **For Technical Teams:** **Consistency eliminates "works on my machine" problems** - development, staging, and production are guaranteed identical. **Speed increases dramatically** - what took days now takes minutes. **Infrastructure becomes self-documenting** - no more outdated wiki pages or missing configuration details.
+    **For Technical Teams:**:
 
-    **For Management:** **Cost control improves** through better resource tracking and elimination of unused resources. **Risk decreases** through reduced manual errors and faster recovery capabilities. **Compliance becomes automated** - security policies are enforced through code, not hope.
+    - **Consistency eliminates "works on my machine" problems** - development, staging, and production are guaranteed identical.
+    - **Speed increases dramatically** - what took days now takes minutes.
+    - **Infrastructure becomes self-documenting** - no more outdated wiki pages or missing configuration details.
+
+    **For Management:**:
+
+    - **Cost control improves** through better resource tracking and elimination of unused resources.
+    - **Risk decreases** through reduced manual errors and faster recovery capabilities.
+    - **Compliance becomes automated** - security policies are enforced through code, not hope.
 
 ```mermaid
 mindmap
@@ -260,7 +268,10 @@ graph TD
     B --> C[Subscriptions]
     C --> D[Resource Groups]
     D --> E[Resources]
+```
 
+```mermaid
+graph TD
     subgraph "Example Structure"
         F[Contoso Tenant]
         G[Production MG]

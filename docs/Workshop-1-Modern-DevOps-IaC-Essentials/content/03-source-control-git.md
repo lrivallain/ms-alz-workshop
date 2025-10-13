@@ -6,21 +6,21 @@ Source control (also known as version control) is a system that tracks changes t
 
 ```mermaid
 graph TB
-    A[Working Directory] --> B[Staging Area]
-    B --> C[Local Repository]
-    C --> D[Remote Repository]
+    Z[$ git clone <repo-url> or $ git init] --> A[Working Directory]
+    A --> B[Local changes]
+    B --> C[$ git add]
+    C --> D[Staging Area]
+    D --> E[$ git commit]
+    E --> F[Local Repository]
+    F --> G[$ git push]
+    G --> H[Remote Repository]
+    H --> I[$ git pull]
+    I --> A
 
-    subgraph "Git Workflow"
-        E[git add] --> B
-        F[git commit] --> C
-        G[git push] --> D
-        H[git pull] --> A
-    end
-
-    A --> E
-    B --> F
-    C --> G
-    D --> H
+    %% Assign 'cmd' class to command nodes
+    class Z,C,E,G,I cmd;
+    %% Style definition for commands
+    classDef cmd fill:#e0f7fa,stroke:#0277bd,stroke-width:2px,font-weight:bold,color:#01579b,rx:8,ry:8;
 ```
 
 ## Why Source Control for Infrastructure?
@@ -150,10 +150,10 @@ graph TB
 
 ```mermaid
 sequenceDiagram
-    participant Dev as Developer
+    participant Dev as 👤 Developer
     participant BR as Feature Branch
     participant PR as Pull Request
-    participant Rev as Reviewers
+    participant Rev as 👥 Reviewers
     participant Main as Main Branch
     participant CI as CI/CD Pipeline
     participant Azure as Azure Environment
@@ -201,8 +201,8 @@ graph TB
         A[Automated Checks]
         B[Security Scan]
         C[Cost Analysis]
-        D[Peer Review]
-        E[Architecture Review]
+        D[👤 Peer Review]
+        E[👤 Architecture Review]
     end
 
     F[Pull Request] --> A
@@ -300,7 +300,7 @@ graph TB
     K --> L
 ```
 
-## Git Best Practices for Infrastructure
+## Git Best Practices for Terraform-ed Infrastructure
 
 ### Repository Structure
 

@@ -41,6 +41,62 @@ graph TB
     M --> O
 ```
 
+## Terraform vs Other IaC Tools
+
+```mermaid
+graph TB
+    subgraph "Feature Comparison Matrix"
+        B["<b>ARM Templates</b><br/>✅ Azure native<br/>✅ No state files<br/>✅ Azure portal integration<br/>⚠️ JSON complexity<br/>❌ Azure only"]
+
+        C["<b>Bicep</b><br/>✅ Azure native<br/>✅ Clean syntax<br/>✅ ARM compatibility<br/>⚠️ Newer tool<br/>❌ Azure only"]
+
+        A["<b>Terraform</b><br/>✅ Multi-cloud<br/>✅ Large ecosystem<br/>✅ Mature tooling<br/>⚠️ State management<br/>⚠️ HCL learning curve"]
+
+        D["<b>Pulumi</b><br/>✅ Multi-cloud<br/>✅ Real programming languages<br/>✅ Rich ecosystem<br/>⚠️ Smaller community<br/>⚠️ Complex for simple tasks"]
+    end
+
+    subgraph "Use Case Recommendations"
+        E["Multi-cloud Strategy<br/>→ Terraform or Pulumi"]
+        F["Azure-only Environment<br/>→ Bicep or ARM"]
+        G["Developer-heavy Team<br/>→ Pulumi or Terraform"]
+        H["Infrastructure-focused Team<br/>→ Bicep or Terraform"]
+    end
+
+    %% Connections with color-coded arrows
+    A -.->|Best for| E
+    D -.->|Alternative for| E
+    B -.->|Traditional choice| F
+    C -.->|Modern choice| F
+    D -.->|Code-familiar teams| G
+    A -.->|Infrastructure teams| G
+    C -.->|Azure specialists| H
+    A -.->|Multi-cloud teams| H
+
+    %% Color-coded styling for tools
+    classDef terraformClass fill:#7c4dff,color:#fff,stroke:#512da8,stroke-width:3px
+    classDef armClass fill:#0078d4,color:#fff,stroke:#106ebe,stroke-width:3px
+    classDef bicepClass fill:#00bcf2,color:#fff,stroke:#0099cc,stroke-width:3px
+    classDef pulumiClass fill:#8a3ffc,color:#fff,stroke:#6929c4,stroke-width:3px
+    classDef recClass fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
+
+    %% Apply tool-specific colors
+    class A terraformClass
+    class B armClass
+    class C bicepClass
+    class D pulumiClass
+    class E,F,G,H recClass
+
+    %% Color the connecting lines to match tools
+    linkStyle 0 stroke:#7c4dff,stroke-width:3px
+    linkStyle 1 stroke:#8a3ffc,stroke-width:3px
+    linkStyle 2 stroke:#0078d4,stroke-width:3px
+    linkStyle 3 stroke:#00bcf2,stroke-width:3px
+    linkStyle 4 stroke:#8a3ffc,stroke-width:3px
+    linkStyle 5 stroke:#7c4dff,stroke-width:3px
+    linkStyle 6 stroke:#00bcf2,stroke-width:3px
+    linkStyle 7 stroke:#7c4dff,stroke-width:3px
+```
+
 ## Core Terraform Concepts
 
 ### 1. Providers
@@ -193,7 +249,7 @@ terraform {
 
 ```mermaid
 sequenceDiagram
-    participant User as Developer
+    participant User as 👤 Developer
     participant TF as Terraform
     participant Azure as Azure API
     participant State as State File
@@ -261,20 +317,17 @@ graph TB
         A[Azure CLI]
         B[Service Principal]
         C[Managed Identity]
-        D[Environment Variables]
     end
 
     subgraph "Use Cases"
         E[Local Development]
         F[CI/CD Pipelines]
         G[Azure VM/Container]
-        H[Automation Scripts]
     end
 
     A --> E
     B --> F
     C --> G
-    D --> H
 
     subgraph "Security Levels"
         I[User Identity]
@@ -355,62 +408,6 @@ output "resource_group_name" {
   description = "Name of the resource group"
   value       = azurerm_resource_group.webapp.name
 }
-```
-
-## Terraform vs Other IaC Tools
-
-```mermaid
-graph TB
-    subgraph "Feature Comparison Matrix"
-        B["<b>ARM Templates</b><br/>✅ Azure native<br/>✅ No state files<br/>✅ Azure portal integration<br/>⚠️ JSON complexity<br/>❌ Azure only"]
-
-        C["<b>Bicep</b><br/>✅ Azure native<br/>✅ Clean syntax<br/>✅ ARM compatibility<br/>⚠️ Newer tool<br/>❌ Azure only"]
-
-        A["<b>Terraform</b><br/>✅ Multi-cloud<br/>✅ Large ecosystem<br/>✅ Mature tooling<br/>⚠️ State management<br/>⚠️ HCL learning curve"]
-
-        D["<b>Pulumi</b><br/>✅ Multi-cloud<br/>✅ Real programming languages<br/>✅ Rich ecosystem<br/>⚠️ Smaller community<br/>⚠️ Complex for simple tasks"]
-    end
-
-    subgraph "Use Case Recommendations"
-        E["Multi-cloud Strategy<br/>→ Terraform or Pulumi"]
-        F["Azure-only Environment<br/>→ Bicep or ARM"]
-        G["Developer-heavy Team<br/>→ Pulumi or Terraform"]
-        H["Infrastructure-focused Team<br/>→ Bicep or Terraform"]
-    end
-
-    %% Connections with color-coded arrows
-    A -.->|Best for| E
-    D -.->|Alternative for| E
-    B -.->|Traditional choice| F
-    C -.->|Modern choice| F
-    D -.->|Code-familiar teams| G
-    A -.->|Infrastructure teams| G
-    C -.->|Azure specialists| H
-    A -.->|Multi-cloud teams| H
-
-    %% Color-coded styling for tools
-    classDef terraformClass fill:#7c4dff,color:#fff,stroke:#512da8,stroke-width:3px
-    classDef armClass fill:#0078d4,color:#fff,stroke:#106ebe,stroke-width:3px
-    classDef bicepClass fill:#00bcf2,color:#fff,stroke:#0099cc,stroke-width:3px
-    classDef pulumiClass fill:#8a3ffc,color:#fff,stroke:#6929c4,stroke-width:3px
-    classDef recClass fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-
-    %% Apply tool-specific colors
-    class A terraformClass
-    class B armClass
-    class C bicepClass
-    class D pulumiClass
-    class E,F,G,H recClass
-
-    %% Color the connecting lines to match tools
-    linkStyle 0 stroke:#7c4dff,stroke-width:3px
-    linkStyle 1 stroke:#8a3ffc,stroke-width:3px
-    linkStyle 2 stroke:#0078d4,stroke-width:3px
-    linkStyle 3 stroke:#00bcf2,stroke-width:3px
-    linkStyle 4 stroke:#8a3ffc,stroke-width:3px
-    linkStyle 5 stroke:#7c4dff,stroke-width:3px
-    linkStyle 6 stroke:#00bcf2,stroke-width:3px
-    linkStyle 7 stroke:#7c4dff,stroke-width:3px
 ```
 
 ## Terraform Directory Structure
@@ -523,15 +520,14 @@ graph TB
     C --> G[Storage Container]
     F --> H[Network Interface]
     E --> H
-
-    subgraph "Implicit Dependencies"
-        I[Terraform manages automatically]
-    end
-
-    subgraph "Explicit Dependencies"
-        J[depends_on argument]
-    end
 ```
+
+There are two types of dependencies in Terraform:
+
+* **Implicit dependencies**: Automatically managed by Terraform based on resource references.
+    * Example: *A VM referencing a subnet creates an implicit dependency on that subnet.*
+* **Explicit dependencies**: Manually defined using the `depends_on` argument.
+    * Example: *Forcing a resource to wait for another resource to be created first.*
 
 ### 4. Common Terraform Errors and Solutions
 

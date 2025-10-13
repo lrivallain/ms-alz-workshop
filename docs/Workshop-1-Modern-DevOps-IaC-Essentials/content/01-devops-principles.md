@@ -81,7 +81,10 @@ Frequent integration of code changes and automated deployment processes.
 
 !!! note "CI/CD: The Engine of DevOps"
 
-    **CI/CD automation** exemplifies this power. **Continuous Integration** automatically builds and tests code with every change, catching issues **early when they're cheap to fix**. **Continuous Deployment** then automatically releases tested code - **no manual handoffs, no waiting**. Companies with mature CI/CD deploy **30 times more frequently** with **50% fewer failures**.
+    **CI/CD automation** exemplifies this power.
+
+    - **Continuous Integration** automatically builds and tests code with every change, catching issues **early when they're cheap to fix**.
+    - **Continuous Deployment** then automatically releases tested code - **no manual handoffs, no waiting**. Companies with mature CI/CD deploy **30 times more frequently** with **50% fewer failures**.
 
 ```mermaid
 graph LR
