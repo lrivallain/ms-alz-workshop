@@ -735,7 +735,7 @@ Take a resource of the previous lab and configure it with AVM instead of `azurer
 
 ```terraform
 resource "azurerm_storage_account" "main" {
-  name                = "st${replace(local.resource_prefix, "-", "")}${local.unique_suffix}"
+  name                = "st${replace(local.resource_prefix, "-", "")}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
 
@@ -796,7 +796,7 @@ resource "azurerm_storage_account" "main" {
       version = "0.6.4"
 
       location                 = azurerm_resource_group.main.location
-      name                     = "st${replace(local.resource_prefix, "-", "")}${local.unique_suffix}"
+      name                     = "st${replace(local.resource_prefix, "-", "")}"
       resource_group_name      = azurerm_resource_group.main.name
       account_kind             = "StorageV2"
       account_replication_type = var.storage_replication_type

@@ -410,8 +410,8 @@ resource "random_id" "unique" {
 
 # Local values for consistent naming
 locals {
-  resource_prefix = "${var.project_name}-${var.environment}"
   unique_suffix   = random_id.unique.hex
+  resource_prefix = "${var.project_name}-${var.environment}-${local.unique_suffix}"
 
   common_tags = merge(var.tags, {
     Environment = var.environment
@@ -430,7 +430,7 @@ resource "azurerm_resource_group" "main" {
 
 # Storage Account for testing
 resource "azurerm_storage_account" "main" {
-  name                     = "st${replace(local.resource_prefix, "-", "")}${local.unique_suffix}"
+  name                     = "st${replace(local.resource_prefix, "-", "")}"
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   account_tier            = "Standard"
@@ -637,10 +637,10 @@ unique_suffix = "xxxxx"
 
 ```bash
 # Verify resource group creation
-az group show --name "rg-workshop-dev" --output table
+az group show --name "$(terraform output -raw resource_group_name)" --output table
 
 # List resources in the resource group
-az resource list --resource-group "rg-workshop-dev" --output table
+az resource list --resource-group "$(terraform output -raw resource_group_name)" --output table
 
 # Get storage account details
 az storage account show --name "$(terraform output -raw storage_account_name)" --resource-group "$(terraform output -raw resource_group_name)" --output table

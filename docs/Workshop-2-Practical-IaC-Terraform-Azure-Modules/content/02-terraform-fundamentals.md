@@ -327,11 +327,12 @@ variable "admin_username" {
 ```terraform
 # terraform/locals.tf
 locals {
-  # Naming conventions
-  resource_prefix = "${var.project_name}-${var.environment}"
-
   # Generate unique suffix for globally unique resources
   unique_suffix = random_string.unique.result
+
+  # Naming conventions
+  resource_prefix = "${var.project_name}-${var.environment}-${local.unique_suffix}"
+
 
   # Common tags merged with user-provided tags
   common_tags = merge(var.tags, {
@@ -405,7 +406,7 @@ resource "azurerm_resource_group" "main" {
 
 # Storage Account
 resource "azurerm_storage_account" "main" {
-  name                = "st${replace(local.resource_prefix, "-", "")}${local.unique_suffix}"
+  name                = "st${replace(local.resource_prefix, "-", "")}"
   resource_group_name = azurerm_resource_group.main.name
   location           = azurerm_resource_group.main.location
 
@@ -515,7 +516,7 @@ resource "azurerm_service_plan" "main" {
 
 # Web App
 resource "azurerm_linux_web_app" "main" {
-  name                = "app-${local.resource_prefix}-${local.unique_suffix}"
+  name                = "app-${local.resource_prefix}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_service_plan.main.location
   service_plan_id     = azurerm_service_plan.main.id
@@ -597,7 +598,7 @@ resource "azurerm_linux_web_app" "main" {
 
 # SQL Server
 resource "azurerm_mssql_server" "main" {
-  name                = "sql-${local.resource_prefix}-${local.unique_suffix}"
+  name                = "sql-${local.resource_prefix}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
 
@@ -669,7 +670,7 @@ resource "azurerm_mssql_firewall_rule" "azure_services" {
 
 # Key Vault for secrets management
 resource "azurerm_key_vault" "main" {
-  name                = "kv-${local.resource_prefix}-${local.unique_suffix}"
+  name                = "kv-${local.resource_prefix}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
