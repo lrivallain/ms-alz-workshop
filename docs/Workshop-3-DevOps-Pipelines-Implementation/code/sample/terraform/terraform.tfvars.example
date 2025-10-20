@@ -1,0 +1,11 @@
+# terraform/terraform.tfvars.example
+project_name = "workshop"
+environment  = "dev"
+location     = "East US"
+
+tags = {
+  Project     = "TerraformWorkshop"
+  Environment = "dev"
+  Owner       = "your-name"
+  ManagedBy   = "Terraform"
+}

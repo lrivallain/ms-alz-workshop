@@ -60,4 +60,8 @@ nav:
     - <b>Module 1</b> - Environment Setup & Validation: Workshop-2-Practical-IaC-Terraform-Azure-Modules/content/01-environment-setup.md
     - <b>Module 2</b> - Building Basic Terraform Configs: Workshop-2-Practical-IaC-Terraform-Azure-Modules/content/02-terraform-fundamentals.md
     - <b>Module 3</b> - Using Azure Verified Modules: Workshop-2-Practical-IaC-Terraform-Azure-Modules/content/03-azure-verified-modules.md
-  #- Overview: Workshop-3-Azure-DevOps-Pipeline-Implementation/README.md
+  - "Workshop 3 - DevOps Pipelines Implementation":
+    - Overview: Workshop-3-DevOps-Pipelines-Implementation/README.md
+    - <b>Module 1</b> - Prepare a GitHub environment: Workshop-3-DevOps-Pipelines-Implementation/content/01-github-environment.md
+    - <b>Module 2</b> - Simple Single-Stage Pipeline Automation with Azure DevOps: Workshop-3-DevOps-Pipelines-Implementation/content/02-pipeline-automation.md
+    - <b>Module 3</b> - Multi-Environment Pipeline Automation with Azure DevOps: Workshop-3-DevOps-Pipelines-Implementation/content/03-multienv-pipeline.md

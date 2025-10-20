@@ -1,6 +1,6 @@
-# ALZ Workshop
+# DevOps & IaC Workshop
 
-The workshops provide hands-on exercises to guide you through the practical implementation of the concepts discussed in the book.
+The workshops provide hands-on exercises to guide you through the practical implementation of Infrastructure-as-Code concepts applied in Azure Landing Zones scenarios.
 
 ## Workshops
 
@@ -12,8 +12,8 @@ This repository is organized into workshops lasting a few hours each:
 2. **[Workshop 2: Practical IaC with Terraform & Azure Modules](Workshop-2-Practical-IaC-Terraform-Azure-Modules/README.md)**
     - Deep dive into using Terraform for Azure, leveraging Terraform modules for reusability, and managing state.
 
-<!-- 3. **[Workshop 3: Azure DevOps Pipeline Implementation](./Workshop-3-Azure-DevOps-Pipeline-Implementation)**
-    - Implementing CI/CD pipelines for automated testing and deployment of infrastructure code. -->
+3. **[Workshop 3: DevOps Pipelines Implementation](./Workshop-3-DevOps-Pipelines-Implementation)**
+    - Implementing CI/CD pipelines for automated testing and deployment of infrastructure code.
 
 ## Getting Started
 

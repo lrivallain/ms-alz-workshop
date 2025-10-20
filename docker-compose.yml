@@ -1,11 +1,12 @@
 services:
-  docs:
+  mkdocs:
     build: .
+    container_name: ms-alz-workshop-docs
     ports:
       - "8000:8000"
     volumes:
-      - .:/workspace
-    entrypoint: /bin/sh
-    command: -c "run.sh"
+      # Mount source code for live reloading during development
+      - .:/app
     environment:
       - PYTHONUNBUFFERED=1
+    restart: unless-stopped
