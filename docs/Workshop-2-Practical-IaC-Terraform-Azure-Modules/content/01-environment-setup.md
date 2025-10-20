@@ -319,9 +319,8 @@ ehthumbs.db
 Thumbs.db
 ```
 
-# Add files to Git
-
 ```bash
+# Add files to Git
 git add .
 git commit -m "Initial project structure"
 ```
