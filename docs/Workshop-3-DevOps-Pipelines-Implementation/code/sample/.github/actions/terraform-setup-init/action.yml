@@ -1,0 +1,68 @@
+# .github/actions/terraform-setup-init/action.yml
+name: 'Complete Terraform Setup and Init'
+description: 'Setup Terraform, authenticate with Azure, and initialize with backend'
+
+inputs:
+  azure-client-id:
+    description: 'Azure Client ID'
+    required: true
+  azure-tenant-id:
+    description: 'Azure Tenant ID'
+    required: true
+  azure-subscription-id:
+    description: 'Azure Subscription ID'
+    required: true
+  working-directory:
+    description: 'Terraform working directory'
+    required: false
+    default: './terraform'
+  environment:
+    description: 'Target environment (dev, prod, staging)'
+    required: true
+  storage-account-suffix:
+    description: 'Random suffix for storage account name'
+    required: true
+  resource-group-name:
+    description: 'Resource group name for state storage'
+    required: false
+    default: 'rg-terraform-state'
+  container-name:
+    description: 'Storage container name for state'
+    required: false
+    default: 'iac-workshop-tfstates'
+  terraform-version:
+    description: 'Terraform version to install'
+    required: false
+    default: 'latest'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Azure Login using OIDC
+      uses: azure/login@v2
+      with:
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ inputs.terraform-version }}
+
+    - name: Verify Azure Authentication
+      shell: bash
+      run: |
+        echo "Verifying Azure authentication..."
+        az account show > /dev/null
+        echo "Azure CLI authentication: OK"
+
+    - name: Terraform Init with Backend
+      shell: bash
+      run: |
+        terraform init \
+          -backend-config="storage_account_name=tfstates${{ inputs.storage-account-suffix }}" \
+          -backend-config="container_name=${{ inputs.container-name }}" \
+          -backend-config="key=terraform-${{ inputs.environment }}.tfstate" \
+          -backend-config="resource_group_name=${{ inputs.resource-group-name }}"
+      working-directory: ${{ inputs.working-directory }}

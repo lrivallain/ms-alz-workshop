@@ -1,0 +1,181 @@
+# .github/actions/terraform-comment/action.yml
+name: 'Terraform Plan Comment'
+description: 'Download terraform plan, generate summary, and comment on PR'
+
+inputs:
+  azure-client-id:
+    description: 'Azure Client ID'
+    required: true
+  azure-tenant-id:
+    description: 'Azure Tenant ID'
+    required: true
+  azure-subscription-id:
+    description: 'Azure Subscription ID'
+    required: true
+  working-directory:
+    description: 'Terraform working directory'
+    required: false
+    default: './terraform'
+  environment:
+    description: 'Target environment (dev, prod, staging)'
+    required: true
+  storage-account-suffix:
+    description: 'Random suffix for storage account name'
+    required: true
+  github-token:
+    description: 'GitHub token for commenting'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Download Plan
+      uses: actions/download-artifact@v4
+      with:
+        name: tfplan-${{ inputs.environment }}
+        path: ${{ inputs.working-directory }}/
+      continue-on-error: true
+
+    - name: Setup Terraform and Init
+      uses: ./.github/actions/terraform-setup-init
+      with:
+        azure-client-id: ${{ inputs.azure-client-id }}
+        azure-tenant-id: ${{ inputs.azure-tenant-id }}
+        azure-subscription-id: ${{ inputs.azure-subscription-id }}
+        working-directory: ${{ inputs.working-directory }}
+        environment: ${{ inputs.environment }}
+        storage-account-suffix: ${{ inputs.storage-account-suffix }}
+
+    - name: Generate Complete Plan Summary
+      shell: bash
+      run: |
+        set -e
+
+        # Set emoji based on environment
+        if [ "${{ inputs.environment }}" = "prod" ]; then
+          EMOJI="🚨"
+          ENV_NAME="Production"
+        else
+          EMOJI="🧪"
+          ENV_NAME="Development"
+        fi
+
+        echo "## ${EMOJI} ${ENV_NAME}" > plan-summary.md
+        echo "" >> plan-summary.md
+
+        # Check if plan file exists
+        if [ ! -f "plan.tfout" ]; then
+          echo "❌ Plan file not found - check plan generation" >> plan-summary.md
+          exit 0
+        fi
+
+        # Get plan output and check for changes
+        PLAN_OUTPUT=$(terraform show -no-color plan.tfout 2>/dev/null || echo "Error reading plan")
+
+        if echo "$PLAN_OUTPUT" | grep -q "No changes"; then
+          echo "✅ No changes detected" >> plan-summary.md
+        elif echo "$PLAN_OUTPUT" | grep -q "Error reading plan"; then
+          echo "❌ Error reading plan file" >> plan-summary.md
+        else
+          # Count changes for summary
+          ADD_COUNT=$(echo "$PLAN_OUTPUT" | grep -c "# .* will be created" || echo "0")
+          CHANGE_COUNT=$(echo "$PLAN_OUTPUT" | grep -c "# .* will be updated" || echo "0")
+          DESTROY_COUNT=$(echo "$PLAN_OUTPUT" | grep -c "# .* will be destroyed" || echo "0")
+
+          # Summary line
+          if [ "$DESTROY_COUNT" -gt "0" ] && [ "${{ inputs.environment }}" = "prod" ]; then
+            echo "🔴 **${ADD_COUNT}** add, **${CHANGE_COUNT}** change, **${DESTROY_COUNT}** destroy" >> plan-summary.md
+          else
+            echo "📝 **${ADD_COUNT}** add, **${CHANGE_COUNT}** change, **${DESTROY_COUNT}** destroy" >> plan-summary.md
+          fi
+
+          echo "" >> plan-summary.md
+
+          # Add collapsible section with full plan
+          echo '<details>' >> plan-summary.md
+          echo '<summary>📋 Click to view full plan details</summary>' >> plan-summary.md
+          echo '' >> plan-summary.md
+          echo '```terraform' >> plan-summary.md
+
+          # Limit output to prevent GitHub comment size limits (65536 chars)
+          # Show first 50KB of plan output
+          echo "$PLAN_OUTPUT" | head -c 50000 >> plan-summary.md
+
+          # Check if we truncated the output
+          if [ ${#PLAN_OUTPUT} -gt 50000 ]; then
+            echo "" >> plan-summary.md
+            echo "... (output truncated - see workflow logs for complete plan)" >> plan-summary.md
+          fi
+
+          echo '```' >> plan-summary.md
+          echo '</details>' >> plan-summary.md
+        fi
+
+        echo "" >> plan-summary.md
+        echo "_Commit: ${GITHUB_SHA:0:7}_" >> plan-summary.md
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Comment on PR
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const fs = require('fs');
+
+          try {
+            const plan = fs.readFileSync('${{ inputs.working-directory }}/plan-summary.md', 'utf8');
+            const environment = '${{ inputs.environment }}';
+            const envName = environment === 'prod' ? 'Production' : 'Development';
+
+            // Check GitHub comment size limit (65536 characters)
+            if (plan.length > 65000) {
+              console.log(`Plan comment is ${plan.length} characters, truncating to fit GitHub limits`);
+              const truncatedPlan = plan.substring(0, 65000) + '\n\n... (comment truncated - see workflow logs for complete plan)';
+              var finalPlan = truncatedPlan;
+            } else {
+              var finalPlan = plan;
+            }
+
+            // Find existing comment
+            const comments = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            const existingComment = comments.data.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes(envName)
+            );
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                comment_id: existingComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: finalPlan
+              });
+              console.log(`Updated existing comment for ${envName}`);
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: finalPlan
+              });
+              console.log(`Created new comment for ${envName}`);
+            }
+          } catch (error) {
+            console.error('Error posting comment:', error);
+
+            const environment = '${{ inputs.environment }}';
+            const envName = environment === 'prod' ? 'Production' : 'Development';
+
+            // Post error comment as fallback
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ❌ ${envName} Plan Error\n\nFailed to generate plan summary. Check workflow logs for details.\n\n_Commit: ${context.sha.substring(0, 7)}_`
+            });
+          }

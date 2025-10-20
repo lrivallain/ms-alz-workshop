@@ -1,0 +1,54 @@
+# .github/actions/terraform-apply/action.yml
+name: 'Terraform Apply'
+description: 'Download plan and apply terraform configuration'
+
+inputs:
+  working-directory:
+    description: 'Terraform working directory'
+    required: false
+    default: './terraform'
+  environment:
+    description: 'Target environment (dev, prod, staging)'
+    required: true
+  use-existing-plan:
+    description: 'Whether to use existing plan artifact'
+    required: false
+    default: 'true'
+  var-file-path:
+    description: 'Path to terraform.tfvars file (if not using existing plan)'
+    required: false
+    default: ''
+  additional-vars:
+    description: 'Additional terraform variables (if not using existing plan)'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Download Plan Artifact
+      if: inputs.use-existing-plan == 'true'
+      uses: actions/download-artifact@v4
+      with:
+        name: tfplan-${{ inputs.environment }}
+        path: ${{ inputs.working-directory }}/
+
+    - name: Terraform Apply (with existing plan)
+      if: inputs.use-existing-plan == 'true'
+      shell: bash
+      run: terraform apply plan.tfout
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Terraform Apply (without existing plan)
+      if: inputs.use-existing-plan == 'false'
+      shell: bash
+      run: |
+        VAR_FILE_ARG=""
+        if [ -n "${{ inputs.var-file-path }}" ]; then
+          VAR_FILE_ARG="-var-file=${{ inputs.var-file-path }}"
+        elif [ -f "environments/${{ inputs.environment }}/terraform.tfvars" ]; then
+          VAR_FILE_ARG="-var-file=environments/${{ inputs.environment }}/terraform.tfvars"
+        fi
+
+        terraform apply -auto-approve $VAR_FILE_ARG ${{ inputs.additional-vars }}
+      working-directory: ${{ inputs.working-directory }}

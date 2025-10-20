@@ -1,0 +1,137 @@
+# .github/workflows/terraform-ci-cd.yml
+name: 'Terraform CI/CD (DISABLED)'
+
+# Disable all triggers by commenting out the 'on' section
+on:
+  workflow_dispatch:  # Manual trigger only
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+
+permissions:
+  id-token: write   # Required for OIDC
+  contents: read    # Required for checkout
+
+jobs:
+  # Job 1: Validate & Plan
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Azure Login using OIDC
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      # with:
+      #   terraform_version: 1.5.0    # It is recommended to pin to a specific version for production
+
+    # Initialize a backend store for state management
+    - name: Terraform Init with backend
+      run: |
+        terraform init \
+          -backend-config="storage_account_name=tfstates${{ vars.RANDOM_SUFFIX }}" \
+          -backend-config="container_name=iac-workshop-tfstates" \
+          -backend-config="key=terraform-dev.tfstate" \
+          -backend-config="resource_group_name=rg-terraform-state"
+      working-directory: ./terraform
+
+    - name: Terraform Validate
+      run: terraform validate
+      working-directory: ./terraform
+
+    - name: Terraform Format Check
+      run: terraform fmt -check=true -diff=true -recursive
+      working-directory: ./terraform
+
+  # Job 2: Plan
+  plan:
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Azure Login using OIDC
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    # Initialize a backend store for state management
+    - name: Terraform Init with backend
+      run: |
+        terraform init \
+          -backend-config="storage_account_name=tfstates${{ vars.RANDOM_SUFFIX }}" \
+          -backend-config="container_name=iac-workshop-tfstates" \
+          -backend-config="key=terraform-dev.tfstate" \
+          -backend-config="resource_group_name=rg-terraform-state"
+      working-directory: ./terraform
+
+    - name: Terraform Plan
+      run: terraform plan -var-file="environments/dev/terraform.tfvars" -out=plan.tfout
+      working-directory: ./terraform
+
+    - name: Terraform Show
+      run: terraform show -no-color ./plan.tfout
+      working-directory: ./terraform
+
+    - name: Save Plan as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: tfplan
+        path: ./terraform/plan.tfout
+        retention-days: 1
+
+  # Job 3: Deploy to Development
+  deploy:
+    needs: plan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Download Plan Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: tfplan
+        path: ./terraform/
+
+    - name: Azure Login using OIDC
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    # Initialize a backend store for state management
+    - name: Terraform Init with backend
+      run: |
+        terraform init \
+          -backend-config="storage_account_name=tfstates${{ vars.RANDOM_SUFFIX }}" \
+          -backend-config="container_name=iac-workshop-tfstates" \
+          -backend-config="key=terraform-dev.tfstate" \
+          -backend-config="resource_group_name=rg-terraform-state"
+      working-directory: ./terraform
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' # Only apply on push to main branch
+      run: terraform apply -var-file="environments/dev/terraform.tfvars" plan.tfout
+      working-directory: ./terraform

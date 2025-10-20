@@ -1,10 +1,10 @@
 # terraform/shared/locals.tf
 locals {
+  # Naming conventions
+  resource_prefix = "${var.project_name}-${var.environment}"
+
   # Generate unique suffix for globally unique resources
   unique_suffix = random_string.unique.result
-
-  # Naming conventions
-  resource_prefix = "${var.project_name}-${var.environment}-${local.unique_suffix}"
 
   # Common tags merged with user-provided tags
   common_tags = merge(var.tags, {

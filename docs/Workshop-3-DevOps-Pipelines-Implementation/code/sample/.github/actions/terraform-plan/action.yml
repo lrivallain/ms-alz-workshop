@@ -1,0 +1,58 @@
+# .github/actions/terraform-plan/action.yml
+name: 'Terraform Plan'
+description: 'Run terraform plan and optionally save as artifact'
+
+inputs:
+  working-directory:
+    description: 'Terraform working directory'
+    required: false
+    default: './terraform'
+  environment:
+    description: 'Target environment (dev, prod, staging)'
+    required: true
+  var-file-path:
+    description: 'Path to terraform.tfvars file'
+    required: false
+    default: ''
+  additional-vars:
+    description: 'Additional terraform variables'
+    required: false
+    default: ''
+  save-plan:
+    description: 'Whether to save plan as artifact'
+    required: false
+    default: 'true'
+  show-plan:
+    description: 'Whether to show plan output'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Terraform Plan
+      shell: bash
+      run: |
+        VAR_FILE_ARG=""
+        if [ -n "${{ inputs.var-file-path }}" ]; then
+          VAR_FILE_ARG="-var-file=${{ inputs.var-file-path }}"
+        elif [ -f "environments/${{ inputs.environment }}/terraform.tfvars" ]; then
+          VAR_FILE_ARG="-var-file=environments/${{ inputs.environment }}/terraform.tfvars"
+        fi
+
+        terraform plan $VAR_FILE_ARG ${{ inputs.additional-vars }} -out=plan.tfout
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Show Plan
+      if: inputs.show-plan == 'true'
+      shell: bash
+      run: terraform show -no-color plan.tfout
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Save Plan as Artifact
+      if: inputs.save-plan == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: tfplan-${{ inputs.environment }}
+        path: ${{ inputs.working-directory }}/plan.tfout
+        retention-days: 5

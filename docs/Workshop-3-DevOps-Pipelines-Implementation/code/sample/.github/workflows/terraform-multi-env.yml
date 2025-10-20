@@ -1,0 +1,205 @@
+# .github/workflows/terraform-ci-cd.yml
+name: 'Multi-Environment Terraform Deployment'
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  id-token: write       # Required for OIDC
+  contents: read        # Required for checkout
+  pull-requests: write  # Required for PR comments
+
+env:
+  TF_WORKING_DIR: './terraform'
+
+jobs:
+  # Validate on all events (push and PR)
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Setup Terraform and Init for Dev
+      uses: ./.github/actions/terraform-setup-init
+      with:
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'dev'
+        storage-account-suffix: ${{ vars.RANDOM_SUFFIX }}
+
+    - name: Terraform Validate
+      run: terraform validate
+      working-directory: ${{ env.TF_WORKING_DIR }}
+
+    - name: Terraform Format Check
+      run: terraform fmt -check=true -diff=true -recursive
+      working-directory: ${{ env.TF_WORKING_DIR }}
+
+  # Plan for Dev environment (runs on both PR and push)
+  plan-dev:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Setup Terraform and Init
+      uses: ./.github/actions/terraform-setup-init
+      with:
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'dev'
+        storage-account-suffix: ${{ vars.RANDOM_SUFFIX }}
+
+    - name: Plan Dev Environment
+      uses: ./.github/actions/terraform-plan
+      with:
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'dev'
+
+  # Plan for Prod environment (now runs on both PR and push)
+  plan-prod:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Setup Terraform and Init
+      uses: ./.github/actions/terraform-setup-init
+      with:
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'prod'
+        storage-account-suffix: ${{ vars.RANDOM_SUFFIX }}
+
+    - name: Plan Prod Environment
+      uses: ./.github/actions/terraform-plan
+      with:
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'prod'
+
+  # Auto-deploy to DEV on push to main
+  deploy-dev:
+    needs: [plan-dev]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: development
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Setup Terraform and Init
+      uses: ./.github/actions/terraform-setup-init
+      with:
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'dev'
+        storage-account-suffix: ${{ vars.RANDOM_SUFFIX }}
+
+    - name: Apply to Development
+      uses: ./.github/actions/terraform-apply
+      with:
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'dev'
+
+    - name: Post-deployment validation
+      run: |
+        echo "🎉 Development deployment completed successfully!"
+        echo "Environment: Development"
+        echo "Timestamp: $(date)"
+        echo "Commit: ${{ github.sha }}"
+
+  # Deploy to PROD with manual approval
+  deploy-prod:
+    needs: [plan-prod, deploy-dev]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Pre-deployment notification
+      run: |
+        echo "🚀 Starting PRODUCTION deployment"
+        echo "⚠️  This deployment affects production systems"
+        echo "Reviewer: ${{ github.triggering_actor }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Changes: ${{ github.event.head_commit.message }}"
+
+    - name: Setup Terraform and Init
+      uses: ./.github/actions/terraform-setup-init
+      with:
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'prod'
+        storage-account-suffix: ${{ vars.RANDOM_SUFFIX }}
+
+    - name: Apply to Production
+      uses: ./.github/actions/terraform-apply
+      with:
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'prod'
+
+    - name: Post-deployment validation
+      run: |
+        echo "✅ Production deployment completed successfully!"
+        echo "Environment: Production"
+        echo "Timestamp: $(date)"
+        echo "Commit: ${{ github.sha }}"
+        echo "Approved by: ${{ github.triggering_actor }}"
+
+  # Comment Dev plan on PRs (using shared action) - runs first
+  comment-plan-dev:
+    needs: [plan-dev]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Comment Dev Plan
+      uses: ./.github/actions/terraform-comment
+      with:
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'dev'
+        storage-account-suffix: ${{ vars.RANDOM_SUFFIX }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  # Comment Prod plan on PRs (using shared action) - runs after dev comment
+  comment-plan-prod:
+    needs: [plan-prod, comment-plan-dev]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Comment Prod Plan
+      uses: ./.github/actions/terraform-comment
+      with:
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        environment: 'prod'
+        storage-account-suffix: ${{ vars.RANDOM_SUFFIX }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
