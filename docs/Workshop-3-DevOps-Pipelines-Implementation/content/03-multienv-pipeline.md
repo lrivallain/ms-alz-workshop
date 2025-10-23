@@ -891,8 +891,4 @@ If the `dev` deployment is successful, and you are ready to switch to production
 
 In this module, you have implemented a multi-environment Terraform deployment pipeline using GitHub Actions. You learned how to create reusable composite actions, set up environment protection rules, and implement approval gates for production deployments. You also explored how to automate plan generation and provide feedback through pull request comments.
 
-## Workshop Conclusion
-
-🎉 **Congratulations!** You've completed the DevOps Pipelines Implementation workshop!
-
-**Thank you for participating! Questions?** 🤔
+**Next Lab**: [Cleanup: Tear Down Resources](../04-cleanup)

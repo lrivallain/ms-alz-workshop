@@ -40,9 +40,9 @@ By the end of this workshop, participants will:
 | **09:00-09:30** | [Prepare a GitHub environment](content/01-github-environment) | Guided Setup |
 | **09:30-10:30** | [Simple Single-Stage Pipeline Automation](content/02-pipeline-automation) | Hands-on Lab |
 | **10:30-10:45** | 15 min | **Break** | |
-| **10:45-11:45** | [Multi-Environment Pipeline Automation](content/03-multienv-pipeline) | Hands-on Lab |
-| **11:45-12:45** | [Azure DevOps Pipeline Implementation](content/04-azure-devops-pipeline-implementation) | Hands-on Lab |
-| **12:45-13:00** | [Troubleshooting & Q&A](content/05-troubleshooting-qa) | Interactive Discussion |
+| **10:45-11:30** | [Multi-Environment Pipeline Automation](content/03-multienv-pipeline) | Hands-on Lab |
+| **11:30-12:00** | [Cleanup](content/04-cleanup) | Cleanup |
+| **12:00-12:15** | [Troubleshooting & Q&A](content/05-troubleshooting-qa) | Interactive Discussion |
 
 ## Prerequisites
 

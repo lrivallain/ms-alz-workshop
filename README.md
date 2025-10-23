@@ -23,3 +23,38 @@ To get started, clone this repository and navigate to the desired workshop folde
 git clone https://github.com/lrivallain/ms-alz-workshop.git
 cd ms-alz-workshop/Workshop-1-Modern-DevOps-IaC-Essentials
 ```
+
+### Run this locally
+
+If you want to run the documentation site locally, you have two options:
+
+#### With Docker
+
+You can use a Docker compose to run a local instance of the documentation site. Make sure you have Docker installed on your machine.
+
+```bash
+docker-compose up
+```
+
+Then open your browser and navigate to `http://localhost:8000`.
+
+#### Without Docker
+
+Install `uv` and dependencies:
+
+```bash
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Dependencies
+uv sync
+```
+
+Run the documentation site:
+
+```bash
+chmod +x ./run.sh
+./run.sh
+```
+
+Then open your browser and navigate to `http://localhost:8000`.

@@ -65,3 +65,4 @@ nav:
     - <b>Module 1</b> - Prepare a GitHub environment: Workshop-3-DevOps-Pipelines-Implementation/content/01-github-environment.md
     - <b>Module 2</b> - Simple Single-Stage Pipeline Automation with Azure DevOps: Workshop-3-DevOps-Pipelines-Implementation/content/02-pipeline-automation.md
     - <b>Module 3</b> - Multi-Environment Pipeline Automation with Azure DevOps: Workshop-3-DevOps-Pipelines-Implementation/content/03-multienv-pipeline.md
+    - <b>Cleanup</b> - Tear Down Resources: Workshop-3-DevOps-Pipelines-Implementation/content/04-cleanup.md
