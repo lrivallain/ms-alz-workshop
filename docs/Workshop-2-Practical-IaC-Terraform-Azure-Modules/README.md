@@ -33,13 +33,13 @@ By the end of this workshop, participants will:
 
     All timings are approximate and may vary based on participant engagement and questions.
 
-| Time |Session | Activity Type |
-|------|---------|---------------|
-| **09:00-09:45** | [Environment Setup & Validation](content/01-environment-setup.md) | Guided Setup |
-| **09:45-10:45** | [Building Basic Terraform Configs](content/02-terraform-fundamentals.md) | Hands-on Lab |
-| **10:45-11:00** | **Break** | |
-| **11:00-12:00** | [Using Azure Verified Modules](content/03-azure-verified-modules.md) | Hands-on Lab |
-| **12:00-12:15** | Troubleshooting & Q&A| Interactive Discussion |
+| Time Slot | Duration | Topic | Materials |
+|-----------|----------|-------|-----------|
+| **Module 1** | 45 min | [Environment Setup & Validation](content/01-environment-setup.md) | Guided Setup |
+| **Module 2** | 60 min | [Building Basic Terraform Configs](content/02-terraform-fundamentals.md) | Hands-on Lab |
+| **Break** | 15 min | ☕ **Coffee Break** | Rest & Networking |
+| **Module 3** | 60 min | [Using Azure Verified Modules](content/03-azure-verified-modules.md) | Hands-on Lab |
+| **Wrap-up** | 15 min | Troubleshooting & Q&A | Interactive Discussion |
 
 ## Prerequisites
 

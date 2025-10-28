@@ -20,7 +20,7 @@ A hands-on technical workshop focused on deployment of Infrastructure as Code us
 
 ## Duration & Format
 
-- **Duration**: 3 hours
+- **Duration**: ~3 hours
 - **Format**: Guided Hands-on Lab
 - **Environment**: Bring Your Own Device (BYOD) with admin privileges
 - **Azure**: Free Azure subscription provided or use existing
@@ -35,14 +35,18 @@ By the end of this workshop, participants will:
 
 ## Workshop Agenda
 
-| Time | Session | Activity Type |
-|------|---------|---------------|
-| **09:00-09:30** | [Prepare a GitHub environment](content/01-github-environment) | Guided Setup |
-| **09:30-10:30** | [Simple Single-Stage Pipeline Automation](content/02-pipeline-automation) | Hands-on Lab |
-| **10:30-10:45** | 15 min | **Break** | |
-| **10:45-11:30** | [Multi-Environment Pipeline Automation](content/03-multienv-pipeline) | Hands-on Lab |
-| **11:30-12:00** | [Cleanup](content/04-cleanup) | Cleanup |
-| **12:00-12:15** | [Troubleshooting & Q&A](content/05-troubleshooting-qa) | Interactive Discussion |
+!!! note "Timings"
+
+    All timings are approximate and may vary based on participant engagement and questions.
+
+| Time Slot | Duration | Topic | Materials |
+|-----------|----------|-------|-----------|
+| **Module 1** | 30 min | [Prepare a GitHub environment](content/01-github-environment) | Guided Setup |
+| **Module 2** | 60 min | [Simple Single-Stage Pipeline Automation](content/02-pipeline-automation) | Hands-on Lab |
+| **Break** | 15 min | ☕ **Coffee Break** | Rest & Networking |
+| **Module 3** | 45 min | [Multi-Environment Pipeline Automation](content/03-multienv-pipeline) | Hands-on Lab |
+| **Module 4** | 30 min | [Cleanup](content/04-cleanup) | Cleanup |
+| **Wrap-up** | 15 min | [Troubleshooting & Q&A](content/05-troubleshooting-qa) | Interactive Discussion |
 
 ## Prerequisites
 

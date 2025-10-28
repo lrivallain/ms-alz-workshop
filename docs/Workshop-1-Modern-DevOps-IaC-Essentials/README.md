@@ -2,7 +2,7 @@
 
 ## Workshop Overview
 
-* **Duration**: 2.5 Hours
+* **Duration**: ~2.5 Hours
 * **Audience**: Technical professionals, Software Development Managers (SDMs), and IT Managers
 * **Focus**: Azure-centric DevOps and Infrastructure as Code practices
 
@@ -22,15 +22,15 @@ By the end of this workshop, participants will understand:
 
     All timings are approximate and may vary based on participant engagement and questions.
 
-| Time | Topic   | Materials |
-|------|---------|-----------|
-| 9:00-9:30 AM   | [DevOps Principles & Value](./content/01-devops-principles.md) | Theory, Discussion |
-| 9:30-10:00 AM  | [Introduction to Infrastructure as Code](./content/02-infrastructure-as-code.md) | Theory, Q&A |
-| 10:00-10:15 AM | [Source Control & Git Workflows](./content/03-source-control-git.md) | Theory, Demo |
-| 10:15-10:30 AM | **Break** | 15 min | |
-| 10:30-10:50 AM | [What is Terraform?](./content/04-terraform-basics.md) | Theory, Examples |
-| 10:50-11:15 AM | [Reusable Modules & Azure Verified Modules](./content/05-terraform-modules-avm.md) | Theory, Demo |
-| 11:15-11:30 AM | Q&A and Wrap-up | Discussion |
+| Time Slot | Duration | Topic | Materials |
+|-----------|----------|-------|-----------|
+| **Module 1** | 30 min | [DevOps Principles & Value](./content/01-devops-principles.md) | Theory, Discussion |
+| **Module 2** | 30 min | [Introduction to Infrastructure as Code](./content/02-infrastructure-as-code.md) | Theory, Q&A |
+| **Module 3** | 30 min | [Source Control & Git Workflows](./content/03-source-control-git.md) | Theory, Exercises |
+| **Break** | 15 min | ☕ **Coffee Break** | Rest & Networking |
+| **Module 4** | 30 min | [What is Terraform?](./content/04-terraform-basics.md) | Theory, Examples |
+| **Module 5** | 15 min | [Reusable Modules & Azure Verified Modules](./content/05-terraform-modules-avm.md) | Theory, Exercises |
+| **Wrap-up** | 15 min | Q&A and Workshop Summary | Discussion |
 
 ## Prerequisites
 
