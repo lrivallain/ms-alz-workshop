@@ -166,7 +166,7 @@ SP_OBJECT_ID=$(az ad sp show --id $APP_ID --query "id" -o tsv)
 echo "Service Principal Object ID: $SP_OBJECT_ID"
 ```
 
-#### Step 2: Configure Workload Identity Federation
+##### Step 2: Configure Workload Identity Federation
 
 ```bash
 # Set your GitHub repository details
@@ -237,7 +237,7 @@ az role assignment create \
   --scope "/subscriptions/$SUBSCRIPTION_ID"
 ```
 
-#### Step 3: Configure GitHub Repository Secrets
+##### Step 3: Configure GitHub Repository Secrets
 
 Add these secrets in your GitHub repository (Settings → Secrets and variables → Actions → Repository secrets):
 
@@ -338,6 +338,9 @@ Edit `terraform/versions.tf` to add the backend configuration in the `terraform`
 ```
   backend "azurerm" {}
 ```
+
+Refer to HashiCorp documentation for more details: [Configure the AzureRM backend for Terraform](https://developer.hashicorp.com/terraform/language/backend/azurerm).
+
 
 ---
 

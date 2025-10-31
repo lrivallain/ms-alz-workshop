@@ -223,7 +223,7 @@ graph TB
     G --> J
 ```
 
-## Azure DevOps Integration
+## DevOps Integration
 
 ### Azure Repos with Infrastructure Code
 
@@ -258,6 +258,40 @@ graph TB
         N[Post-deployment Tests]
     end
 
+    I --> K
+    K --> L
+    L --> M
+    M --> N
+```
+
+### GitHub Integration for Infrastructure Code
+
+```mermaid
+graph TB
+    subgraph "GitHub"
+        A[GitHub Repositories]
+        B[GitHub Actions]
+        C[GitHub Issues]
+        D[GitHub Projects]
+    end
+    subgraph "Infrastructure Repository"
+        E[Terraform Files]
+        F[Workflow YAML]
+        G[Documentation]
+        H[Test Scripts]
+    end
+    A --> E
+    A --> F
+    A --> G
+    A --> H
+    B --> I[Build & Test]
+    B --> J[Plan & Apply]
+    subgraph "Deployment Process"
+        K[terraform plan]
+        L[Manual Approval]
+        M[terraform apply]
+        N[Post-deployment Tests]
+    end
     I --> K
     K --> L
     L --> M

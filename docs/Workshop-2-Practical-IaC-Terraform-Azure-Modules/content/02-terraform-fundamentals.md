@@ -109,7 +109,7 @@ location     = "East US 2"
 app_service_sku = "S1"
 
 # Database Configuration
-database_sku = "Basic"
+database_sku = "GP_S_Gen5_1"
 database_max_size_gb = 2
 database_backup_retention_days = 7
 database_geo_redundant_backup = false

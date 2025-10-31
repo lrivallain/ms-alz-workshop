@@ -14,7 +14,7 @@ A hands-on technical workshop focused on practical implementation of Infrastruct
 
 ## Duration & Format
 
-- **Duration**: 4 hours (Half-day intensive)
+- **Duration**: ~3 hours (Half-day intensive)
 - **Format**: Guided Hands-on Lab
 - **Environment**: Bring Your Own Device (BYOD) with admin privileges
 - **Azure**: Free Azure subscription provided or use existing

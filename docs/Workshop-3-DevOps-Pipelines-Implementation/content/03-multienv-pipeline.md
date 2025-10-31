@@ -13,7 +13,7 @@ This module covers the implementation of automated Infrastructure as Code deploy
 
 ---
 
-### 2. Multi-stage Pipeline Example
+## Multi-stage Pipeline Example
 
 To illustrate job dependencies, we will implement a multi-stage pipeline to split the CI/CD process into distinct phases:
 
@@ -179,7 +179,9 @@ Once the workflow is completed, you can explore the logs of each job by clicking
 
 You can also explore the artifact generated in the *plan* job by clicking on the `tfplan` link in the summary of the job. As the Terraform plan was saved as a binary file, you won't be able to read it directly but you can download it and use it in your local environment with the `terraform show` command.
 
-### Multi-environment Pipeline
+---
+
+## Multi-environment Pipeline
 
 In the following section we will enhance the previous pipeline to support multiple environments: `dev` and `prod`. We are ignoring the `staging` environment for simplicity.
 
@@ -201,7 +203,7 @@ touch .github/actions/terraform-apply/action.yml
 touch .github/actions/terraform-comment/action.yml
 ```
 
-##### Composite Action: Setup Terraform and Init
+##### Setup Terraform and Init
 
 ```yaml
 # .github/actions/terraform-setup-init/action.yml
@@ -274,7 +276,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
 ```
 
-##### Composite Action: Terraform Plan
+##### Terraform Plan
 
 ```yaml
 # .github/actions/terraform-plan/action.yml
@@ -337,7 +339,7 @@ runs:
         retention-days: 5
 ```
 
-##### Composite Action: Terraform Apply
+##### Terraform Apply
 
 ```yaml
 # .github/actions/terraform-apply/action.yml
@@ -396,7 +398,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
 ```
 
-##### Composite Action: Terraform Comment
+##### Terraform Comment
 
 ```yaml
 # .github/actions/terraform-comment/action.yml
