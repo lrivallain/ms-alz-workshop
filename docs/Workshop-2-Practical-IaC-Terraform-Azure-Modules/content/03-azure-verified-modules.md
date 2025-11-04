@@ -775,7 +775,7 @@ resource "azurerm_storage_account" "main" {
   # Network rules (restrictive by default)
   network_rules {
     default_action = "Deny"
-    ip_rules       = ["82.65.43.153"] # Add your IP addresses as needed
+    ip_rules       = [""] # Add your IP addresses as needed
 
     # Allow access from the same virtual network (when implemented)
     virtual_network_subnet_ids = []
@@ -834,7 +834,7 @@ resource "azurerm_storage_account" "main" {
       network_rules = {
         bypass                     = ["AzureServices"]
         default_action             = "Deny"
-        ip_rules                   = ["82.65.43.153"]
+        ip_rules                   = [""] # Add your IP addresses
         virtual_network_subnet_ids = []
       }
 
