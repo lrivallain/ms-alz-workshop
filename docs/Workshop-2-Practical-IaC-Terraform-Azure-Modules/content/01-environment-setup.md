@@ -16,11 +16,11 @@ This hands-on lab guides you through setting up a complete Infrastructure as Cod
 
     All command examples are provided in Bash syntax. Windows users can use Git Bash, WSL, or adapt commands for PowerShell.
 
-    ## Prerequisites
+## Prerequisites
 
-    - Administrative access to your computer
-    - Active Azure subscription
-    - Internet connectivity for tool downloads
+- Administrative access to your computer / or GitHub account for Codespaces
+- Active Azure subscription
+- Internet connectivity for tool downloads
 
 ---
 
