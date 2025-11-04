@@ -1,0 +1,117 @@
+{
+    "name": "ALZ Workshop - IaC Development Environment",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {
+            "ppa": true,
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/azure-cli:1": {
+            "version": "latest",
+            "installBicep": false
+        },
+        "ghcr.io/devcontainers/features/terraform:1": {
+            "version": "latest",
+            "tflint": true,
+            "terragrunt": false
+        },
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts",
+            "nodeGypDependencies": true
+        },
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true,
+            "installOhMyZsh": true,
+            "upgradePackages": true,
+            "username": "vscode",
+            "userUid": "automatic",
+            "userGid": "automatic"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "hashicorp.terraform",
+                "ms-vscode.azurecli",
+                "ms-azure-devops.azure-pipelines",
+                "redhat.vscode-yaml",
+                "eamodio.gitlens",
+                "ms-vscode.azure-account",
+                "ms-azuretools.vscode-azureresourcegroups",
+                "ms-azuretools.vscode-azurestorage",
+                "ms-azuretools.vscode-azureterraform",
+                "github.copilot",
+                "github.copilot-chat",
+                "ms-python.python",
+                "ms-toolsai.jupyter",
+                "ms-vscode.powershell"
+            ],
+            "settings": {
+                "terraform.experimentalFeatures.validateOnSave": true,
+                "terraform.languageServer": {
+                    "external": true,
+                    "args": [
+                        "serve"
+                    ]
+                },
+                "files.associations": {
+                    "*.tf": "terraform",
+                    "*.tfvars": "terraform",
+                    "*.hcl": "terraform"
+                },
+                "editor.formatOnSave": true,
+                "editor.tabSize": 2,
+                "editor.insertSpaces": true,
+                "files.exclude": {
+                    "**/.terraform": true,
+                    "**/terraform.tfstate": true,
+                    "**/terraform.tfstate.backup": true,
+                    "**/.terraformrc": true,
+                    "**/terraform.rc": true
+                },
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "git.autofetch": true,
+                "git.enableSmartCommit": true,
+                "workbench.startupEditor": "readme",
+                "explorer.confirmDelete": false,
+                "explorer.confirmDragAndDrop": false,
+                "yaml.schemas": {
+                    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+                }
+            }
+        }
+    },
+    "containerEnv": {
+        "TF_PLUGIN_CACHE_DIR": "/tmp/terraform-plugin-cache",
+        "TF_CLI_CONFIG_FILE": "/workspaces/.terraformrc"
+    },
+    "remoteEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "PATH": "${containerEnv:PATH}:/usr/local/bin:/home/vscode/.local/bin"
+    },
+    "mounts": [
+        "source=terraform-plugin-cache,target=/tmp/terraform-plugin-cache,type=volume"
+    ],
+    "postCreateCommand": "bash .devcontainer/post-create.sh",
+    "forwardPorts": [
+        8000,
+        3000,
+        8080
+    ],
+    "portsAttributes": {
+        "8000": {
+            "label": "MkDocs Dev Server",
+            "onAutoForward": "notify"
+        },
+        "3000": {
+            "label": "Development Server",
+            "onAutoForward": "silent"
+        },
+        "8080": {
+            "label": "Web Application",
+            "onAutoForward": "silent"
+        }
+    },
+    "remoteUser": "vscode"
+}
