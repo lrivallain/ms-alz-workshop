@@ -10,11 +10,7 @@
             "version": "latest",
             "installBicep": false
         },
-        "ghcr.io/devcontainers/features/terraform:1": {
-            "version": "latest",
-            "tflint": false,
-            "terragrunt": false
-        },
+        "ghcr.io/devcontainers/features/terraform:1.4.2": {},
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts",
             "nodeGypDependencies": true
