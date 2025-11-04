@@ -100,8 +100,6 @@ echo "Checking tool versions:"
 echo "  Git: $(git --version 2>/dev/null || echo 'NOT INSTALLED')"
 echo "  Azure CLI: $(az --version 2>/dev/null | head -1 || echo 'NOT INSTALLED')"
 echo "  Terraform: $(terraform version 2>/dev/null | head -1 || echo 'NOT INSTALLED')"
-echo "  Node.js: $(node --version 2>/dev/null || echo 'NOT INSTALLED')"
-echo "  jq: $(jq --version 2>/dev/null || echo 'NOT INSTALLED')"
 
 # Install Python packages for potential use
 print_status "Installing Python packages..."
@@ -114,7 +112,7 @@ pip3 install --user \
 
 # Create helpful aliases
 print_status "Setting up helpful aliases..."
-cat >> /home/vscode/.zshrc << 'EOF'
+cat >> /home/vscode/.bashrc << 'EOF'
 # Workshop specific
 alias workshop='cd /workspaces/terraform-workshop'
 alias lab='cd /workspaces/terraform-workshop/terraform'
