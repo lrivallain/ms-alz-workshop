@@ -1,5 +1,5 @@
 {
-    "name": "ALZ Workshop - IaC Development Environment",
+    "name": "DevOps & IaC Workshop",
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
     "features": {
         "ghcr.io/devcontainers/features/git:1": {
@@ -10,20 +10,13 @@
             "version": "latest",
             "installBicep": false
         },
-        "ghcr.io/devcontainers/features/terraform:1.4.2": {},
+        "ghcr.io/devcontainers/features/terraform:1": {},
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts",
             "nodeGypDependencies": true
         },
-        "ghcr.io/devcontainers/features/common-utils:2": {
-            "installZsh": true,
-            "configureZshAsDefaultShell": true,
-            "installOhMyZsh": true,
-            "upgradePackages": true,
-            "username": "vscode",
-            "userUid": "automatic",
-            "userGid": "automatic"
-        }
+        "ghcr.io/devcontainers/features/python:1": {},
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
     },
     "customizations": {
         "vscode": {
@@ -33,15 +26,11 @@
                 "ms-azure-devops.azure-pipelines",
                 "redhat.vscode-yaml",
                 "eamodio.gitlens",
-                "ms-vscode.azure-account",
                 "ms-azuretools.vscode-azureresourcegroups",
                 "ms-azuretools.vscode-azurestorage",
                 "ms-azuretools.vscode-azureterraform",
                 "github.copilot",
-                "github.copilot-chat",
-                "ms-python.python",
-                "ms-toolsai.jupyter",
-                "ms-vscode.powershell"
+                "github.copilot-chat"
             ],
             "settings": {
                 "terraform.experimentalFeatures.validateOnSave": true,

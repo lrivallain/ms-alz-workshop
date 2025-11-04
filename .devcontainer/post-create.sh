@@ -100,17 +100,6 @@ echo "Checking tool versions:"
 echo "  Git: $(git --version 2>/dev/null || echo 'NOT INSTALLED')"
 echo "  Azure CLI: $(az --version 2>/dev/null | head -1 || echo 'NOT INSTALLED')"
 echo "  Terraform: $(terraform version 2>/dev/null | head -1 || echo 'NOT INSTALLED')"
-echo "  Node.js: $(node --version 2>/dev/null || echo 'NOT INSTALLED')"
-echo "  jq: $(jq --version 2>/dev/null || echo 'NOT INSTALLED')"
-
-# Install Python packages for potential use
-print_status "Installing Python packages..."
-pip3 install --user \
-    pyyaml \
-    requests \
-    azure-cli-core \
-    azure-identity \
-    azure-mgmt-resource
 
 # Create helpful aliases
 print_status "Setting up helpful aliases..."
@@ -148,13 +137,16 @@ cat << 'EOF'
 ║  ✅ Git, Azure CLI, Terraform, Node.js                                       ║
 ║  ✅ VS Code extensions for Terraform, Azure, and DevOps                      ║
 ║  ✅ Pre-configured settings and aliases                                      ║
-║  ✅ Workshop directory structure                                             ║
+║  ✅ Workshop directory: /workspaces/terraform-workshop                       ║
 ║                                                                              ║
 ║  Quick start:                                                                ║
 ║  • Run 'workshop' to navigate to workshop directory                          ║
 ║  • Configure Git: git config --global user.name "Your Name"                  ║
 ║  • Login to Azure: az login                                                  ║
 ║  • Set your sub: az account set --subscription 'Your Subscription'.          ║
+║                                                                              ║
+║  YOUR WORKING DIRECTORY IS: /workspaces/terraform-workshop.                  ║
+║  (do not confuse with /workspaces/ms-alz-workshop directory)                 ║
 ║                                                                              ║
 ║  Happy learning! 📚                                                          ║
 ╚══════════════════════════════════════════════════════════════════════════════╝

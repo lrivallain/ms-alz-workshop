@@ -16,249 +16,299 @@ This hands-on lab guides you through setting up a complete Infrastructure as Cod
 
     All command examples are provided in Bash syntax. Windows users can use Git Bash, WSL, or adapt commands for PowerShell.
 
-## Prerequisites
+    ## Prerequisites
 
-- Administrative access to your computer
-- Active Azure subscription
-- Internet connectivity for tool downloads
+    - Administrative access to your computer
+    - Active Azure subscription
+    - Internet connectivity for tool downloads
 
 ---
 
 ## Part 1: Tool Installation and Configuration
 
-### Step 1: Git Installation and Configuration
+### Option 1: Using Dev Container (Recommended) with GitHub Codespaces
 
-**Windows Installation**:
+If you have a GitHub account, you can use GitHub Codespaces to launch a pre-configured development environment in the cloud.
 
-```powershell
-# Option 1: Download and install from git-scm.com
-# Option 2: Use Chocolatey
-choco install git
+??? info "Details for Codespaces setup"
 
-# Verify installation
-git --version
-```
+    1. Access the repository in GitHub: [https://github.com/lrivallain/ms-alz-workshop](https://github.com/lrivallain/ms-alz-workshop)
+    1. Fork the repository to your account: provide a name for your fork.
+    1. From the fork repository, click on the green "`Code`" button
+    1. Select "`Open with Codespaces`" > "`New codespace`".
 
-**macOS Installation**:
+    This will launch a new Codespace with all tools pre-installed and configured. You need to wait a few minutes for the environment to be set up.
 
-```bash
-# Option 1: Use Homebrew
-brew install git
+    Once setup is complete, you can access your workspace by running the following commands in the terminal:
 
-# Option 2: Download from git-scm.com
-# Verify installation
-git --version
-```
+    ```bash
+    workshop # Navigate to the workshop root directory
 
-**Linux Installation**:
+    # `workshop` command is an alias for:
+    cd /workspaces/terraform-workshop
 
-```bash
-# Ubuntu/Debian
-sudo apt update
-sudo apt install git
+    # To open the folder in VS Code:
+    code -r -a . # Add the current folder in VS Code (should be empty initially)
+    ```
 
-# CentOS/RHEL
-sudo yum install git
+    You can then jump to **"Part 2: Workspace Setup"**.
 
-# Verify installation
-git --version
-```
+    !!! warning "Folder hierarchy in codespaces"
 
-**Git Configuration**:
+        If you are using Codespaces, the workshop directory is already created for you at `/workspaces/terraform-workshop`. You do not need to create it again.
 
-```bash
-# Configure user identity (required)
-git config --global user.name "Your Full Name"
-git config --global user.email "your.email@company.com"
+        Also, do not confuse the repository root folder with the workshop folder. The repository root contains multiple workshops, while the workshop folder is where you will do your Terraform work.
 
-# Configure line endings
-# Windows:
-git config --global core.autocrlf true
+        * `/workspaces/ms-alz-workshop/`  --> Repository root folder --> Do not edit files here
+        * `/workspaces/terraform-workshop/` --> Workshop folder --> Your working directory
 
-# macOS/Linux:
-git config --global core.autocrlf input
 
-# Set default branch name
-git config --global init.defaultBranch main
+### Option 2: Manual Installation on workstation
 
-# Configure credential helper
-git config --global credential.helper cache
+??? info "Details for manual installation"
 
-# Verify configuration
-git config --list
-```
+    #### Step 1: Git Installation and Configuration
 
-### Step 2: Visual Studio Code Setup
+    **Windows Installation**:
 
-**Installation**:
+    ```powershell
+    # Option 1: Download and install from git-scm.com
+    # Option 2: Use Chocolatey
+    choco install git
 
-1. Download VS Code from https://code.visualstudio.com/download
-2. Install with default options
-3. Launch VS Code
+    # Verify installation
+    git --version
+    ```
 
-**Essential Extensions Installation**:
+    **macOS Installation**:
 
-```bash
-# Install extensions via command line
-code --install-extension HashiCorp.terraform
-code --install-extension ms-vscode.azurecli
-code --install-extension ms-azure-devops.azure-pipelines
-code --install-extension redhat.vscode-yaml
-code --install-extension eamodio.gitlens
-code --install-extension ms-vscode.azure-account
+    ```bash
+    # Option 1: Use Homebrew
+    brew install git
 
-# Verify extensions are installed
-code --list-extensions
-```
+    # Option 2: Download from git-scm.com
+    # Verify installation
+    git --version
+    ```
 
-**VS Code Configuration**:
+    **Linux Installation**:
 
-Create/update VS Code settings:
+    ```bash
+    # Ubuntu/Debian
+    sudo apt update
+    sudo apt install git
 
-```json
-// File: settings.json (Ctrl+Shift+P -> "Preferences: Open Settings (JSON)")
-{
-  "terraform.experimentalFeatures.validateOnSave": true,
-  "terraform.languageServer": {
-    "external": true,
-    "args": ["serve"]
-  },
-  "files.associations": {
-    "*.tf": "terraform",
-    "*.tfvars": "terraform"
-  },
-  "editor.formatOnSave": true,
-  "editor.tabSize": 2,
-  "editor.insertSpaces": true,
-  "files.exclude": {
-    "**/.terraform": true,
-    "**/terraform.tfstate": true,
-    "**/terraform.tfstate.backup": true
-  }
-}
-```
+    # CentOS/RHEL
+    sudo yum install git
 
-### Step 3: Azure CLI Installation
+    # Verify installation
+    git --version
+    ```
 
-**Windows Installation**:
+    **Git Configuration**:
 
-```powershell
-# Option 1: MSI Installer from Microsoft Learn
-# Download and run: https://aka.ms/installazurecliwindows
+    ```bash
+    # Configure user identity (required)
+    git config --global user.name "Your Full Name"
+    git config --global user.email "your.email@company.com"
 
-# Option 2: PowerShell
-Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'
+    # Configure line endings
+    # Windows:
+    git config --global core.autocrlf true
 
-# Option 3: Chocolatey
-choco install azure-cli
-```
+    # macOS/Linux:
+    git config --global core.autocrlf input
 
-**macOS Installation**:
-```bash
-# Using Homebrew (recommended)
-brew install azure-cli
+    # Set default branch name
+    git config --global init.defaultBranch main
 
-# Alternative: Direct download
-curl -L https://aka.ms/InstallAzureCli | bash
-```
+    # Configure credential helper
+    git config --global credential.helper cache
 
-**Linux Installation**:
+    # Verify configuration
+    git config --list
+    ```
 
-```bash
-# Ubuntu/Debian
-curl -sL https://aka.ms/InstallAzureCLIUbuntu | sudo bash
+    #### Step 2: Visual Studio Code Setup
 
-# CentOS/RHEL
-sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-echo -e "[azure-cli]
-name=Azure CLI
-baseurl=https://packages.microsoft.com/yumrepos/azure-cli
-enabled=1
-gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/azure-cli.repo
-sudo yum install azure-cli
-```
+    **Installation**:
 
-**Verify Azure CLI Installation**:
+    1. Download VS Code from [https://code.visualstudio.com/download](https://code.visualstudio.com/download)
+    1. Install with default options
+    1. Launch VS Code
+    1. MacOS users only: Open the Command Palette (`Cmd+Shift+P`)
+        1. Type '`shell command`'
+        1. Run the `Shell Command: Install 'code' command in PATH` command.
 
-```bash
-# Check version (should be 2.30.0 or later)
-az --version
+    **Essential Extensions Installation**:
 
-# Login to Azure
-az login
+    ```bash
+    # Install extensions via command line
+    code --install-extension hashicorp.terraform
+    code --install-extension ms-vscode.azurecli
+    code --install-extension ms-azure-devops.azure-pipelines
+    code --install-extension redhat.vscode-yaml
+    code --install-extension eamodio.gitlens
 
-# List available subscriptions
-az account list --output table
+    # Verify extensions are installed
+    code --list-extensions
+    ```
 
-# Set default subscription (if you have multiple)
-az account set --subscription "Your Subscription Name"
+    **VS Code Configuration**:
 
-# Verify current context
-az account show
-```
+    Create/update VS Code settings:
 
-### Step 4: Terraform Installation
+    ```json
+    // File: settings.json (Ctrl+Shift+P -> "Preferences: Open Settings (JSON)")
+    {
+      "terraform.experimentalFeatures.validateOnSave": true,
+      "terraform.languageServer": {
+        "external": true,
+        "args": ["serve"]
+      },
+      "files.associations": {
+        "*.tf": "terraform",
+        "*.tfvars": "terraform"
+      },
+      "editor.formatOnSave": true,
+      "editor.tabSize": 2,
+      "editor.insertSpaces": true,
+      "files.exclude": {
+        "**/.terraform": true,
+        "**/terraform.tfstate": true,
+        "**/terraform.tfstate.backup": true
+      }
+    }
+    ```
 
-!!! tip "Terraform or OpenTofu ?"
+    #### Step 3: Azure CLI Installation
 
-    This workshop uses Terraform by HashiCorp. OpenTofu is a community-driven fork of Terraform. While similar, there may be differences in features and support. You can choose to use OpenTofu in place of the Terraform commands and configurations provided here, but be aware of potential discrepancies.
+    **Windows Installation**:
 
-**Windows Installation**:
+    ```powershell
+    # Option 1: MSI Installer from Microsoft Learn
+    # Download and run: https://aka.ms/installazurecliwindows
 
-```powershell
-# Option 1: Chocolatey (recommended)
-choco install terraform
+    # Option 2: PowerShell
+    Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'
 
-# Option 2: Manual download
-# Download from https://developer.hashicorp.com/terraform/downloads
-# Extract to a directory in your PATH
+    # Option 3: Chocolatey
+    choco install azure-cli
+    ```
 
-# Verify installation
-terraform version
-```
+    **macOS Installation**:
+    ```bash
+    # Using Homebrew (recommended)
+    brew install azure-cli
 
-**macOS Installation**:
+    # Alternative: Direct download
+    curl -L https://aka.ms/InstallAzureCli | bash
+    ```
 
-```bash
-# Option 1: Homebrew (recommended)
-brew tap hashicorp/tap
-brew install hashicorp/tap/terraform
+    **Linux Installation**:
 
-# Option 2: Manual download
-# Download from https://developer.hashicorp.com/terraform/downloads
+    ```bash
+    # Ubuntu/Debian
+    curl -sL https://aka.ms/InstallAzureCLIUbuntu | sudo bash
 
-# Verify installation
-terraform version
-```
+    # CentOS/RHEL
+    sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+    echo -e "[azure-cli]
+    name=Azure CLI
+    baseurl=https://packages.microsoft.com/yumrepos/azure-cli
+    enabled=1
+    gpgcheck=1
+    gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/azure-cli.repo
+    sudo yum install azure-cli
+    ```
 
-**Linux Installation**:
+    **Verify Azure CLI Installation**:
 
-```bash
-# Ubuntu/Debian
-wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install terraform
+    ```bash
+    # Check version (should be 2.30.0 or later)
+    az --version
 
-# CentOS/RHEL
-sudo yum install -y yum-utils
-sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-sudo yum -y install terraform
+    # Login to Azure
+    az login
 
-# Verify installation
-terraform version
-```
+    # List available subscriptions
+    az account list --output table
+
+    # Set default subscription (if you have multiple)
+    az account set --subscription "Your Subscription Name"
+
+    # Verify current context
+    az account show
+    ```
+
+    #### Step 4: Terraform Installation
+
+    !!! tip "Terraform or OpenTofu ?"
+
+        This workshop uses Terraform by HashiCorp. OpenTofu is a community-driven fork of Terraform. While similar, there may be differences in features and support. You can choose to use OpenTofu in place of the Terraform commands and configurations provided here, but be aware of potential discrepancies.
+
+    **Windows Installation**:
+
+    ```powershell
+    # Option 1: Chocolatey (recommended)
+    choco install terraform
+
+    # Option 2: Manual download
+    # Download from https://developer.hashicorp.com/terraform/downloads
+    # Extract to a directory in your PATH
+
+    # Verify installation
+    terraform version
+    ```
+
+    **macOS Installation**:
+
+    ```bash
+    # Option 1: Homebrew (recommended)
+    brew tap hashicorp/tap
+    brew install hashicorp/tap/terraform
+
+    # Option 2: Manual download
+    # Download from https://developer.hashicorp.com/terraform/downloads
+
+    # Verify installation
+    terraform version
+    ```
+
+    **Linux Installation**:
+
+    ```bash
+    # Ubuntu/Debian
+    wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+    sudo apt update && sudo apt install terraform
+
+    # CentOS/RHEL
+    sudo yum install -y yum-utils
+    sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+    sudo yum -y install terraform
+
+    # Verify installation
+    terraform version
+    ```
 
 ---
 
 ## Part 2: Workspace Setup
 
+```bash
+# Create workspace directory structure
+mkdir -p /workspaces/terraform-workshop/terraform
 ### Step 1: Create Project Directory Structure
 
 ```bash
-# Create workshop directory
+# Based on your environment, choose one of the following options:
+
+# Option: on WORKSTATION: Create workshop directory
 mkdir terraform-workshop
 cd terraform-workshop
+# Option: on CODESPACE: The directory is already created, just navigate to it
+cd /workspaces/terraform-workshop
 
 # Create directory structure
 mkdir -p {terraform,scripts,docs}
@@ -651,6 +701,8 @@ az storage account show --name "$(terraform output -raw storage_account_name)" -
 
 ### Step 1: Open Project in VS Code
 
+**If not already open**, launch VS Code in the project directory:
+
 ```bash
 # Open project in VS Code
 code .
@@ -710,7 +762,6 @@ Complete this checklist to verify your environment:
 - [ ] Azure CLI Tools extension installed
 - [ ] YAML extension installed
 - [ ] GitLens extension installed
-- [ ] Azure Account extension installed
 
 #### ✅ Terraform Workflow Validation
 
