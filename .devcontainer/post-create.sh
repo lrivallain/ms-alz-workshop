@@ -103,7 +103,7 @@ echo "  Terraform: $(terraform version 2>/dev/null | head -1 || echo 'NOT INSTAL
 
 # Create helpful aliases
 print_status "Setting up helpful aliases..."
-cat >> /home/vscode/.zshrc << 'EOF'
+cat >> /home/vscode/.bashrc << 'EOF'
 # Workshop specific
 alias workshop='cd /workspaces/terraform-workshop'
 alias lab='cd /workspaces/terraform-workshop/terraform'
