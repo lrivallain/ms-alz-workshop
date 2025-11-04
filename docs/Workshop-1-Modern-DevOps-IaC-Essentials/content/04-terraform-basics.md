@@ -12,28 +12,24 @@ Terraform is an open-source Infrastructure as Code (IaC) tool created by HashiCo
 
 ```mermaid
 graph TB
-    A[Terraform Configuration] --> B[terraform plan]
-    B --> C[Execution Plan]
-    C --> D[terraform apply]
-    D --> E[Infrastructure Created]
+    A[Terraform Configuration] --> B[terraform init]
+    B --> C[Provider Plugins Downloaded]
+    C --> D[terraform plan]
+    D --> E[Execution Plan]
+    E --> F[terraform apply]
+    F --> G[Infrastructure Created]
 
-    subgraph "Terraform Workflow"
-        F[Write] --> G[Plan]
-        G --> H[Apply]
-        H --> I[Manage]
-    end
-
-    subgraph "Cloud Providers"
+    subgraph "Providers"
         J[Azure]
         K[AWS]
         L[Google Cloud]
-        M[VMware]
+        M[VMware...]
     end
 
-    E --> J
-    E --> K
-    E --> L
-    E --> M
+    G --> J
+    G --> K
+    G --> L
+    G --> M
 
     J --> O[State Management]
     K --> O
@@ -418,55 +414,24 @@ output "resource_group_name" {
 terraform-azure-project/
 ├── environments/
 │   ├── dev/
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── provider.tf
-│   │   ├── terraform.tf
 │   │   ├── terraform.tfvars
-│   │   └── variables.tf
 │   ├── staging/
+│   │   ├── terraform.tfvars
 │   └── production/
+│       ├── terraform.tfvars
 ├── modules/
 │   ├── web-app/
 │   │   ├── main.tf
 │   │   ├── outputs.tf
 │   │   └── variables.tf
 │   └── database/
-├── shared/
-│   ├── backend.tf
-│   └── providers.tf
 ├── .gitignore
+├── main.tf
+├── outputs.tf
+├── provider.tf / versions.tf
+├── terraform.tfvars.example
+├── variables.tf
 └── README.md
-```
-
-```mermaid
-graph TB
-    A[Project Root] --> B[environments/]
-    A --> C[modules/]
-    A --> D[shared/]
-
-    B --> E[dev/]
-    B --> F[staging/]
-    B --> G[production/]
-
-    C --> H[web-app/]
-    C --> I[database/]
-    C --> J[networking/]
-
-    D --> K[providers.tf]
-    D --> L[backend.tf]
-
-    subgraph "Environment Files"
-        M[main.tf]
-        N[variables.tf]
-        O[outputs.tf]
-        P[terraform.tfvars]
-    end
-
-    E --> M
-    E --> N
-    E --> O
-    E --> P
 ```
 
 ## Terraform Best Practices
@@ -556,12 +521,7 @@ graph TB
     E --> J
 ```
 
-## Discussion Questions
-
-1. **For Managers**: How does Terraform's multi-cloud capability align with your organization's cloud strategy?
-2. **For Technical Teams**: What are your concerns about managing Terraform state in a team environment?
-3. **For Everyone**: How would you approach migrating existing manually-created infrastructure to Terraform?
-
+<!--
 ## Exercise
 
 ### Group Exercise: Infrastructure Design
@@ -585,7 +545,7 @@ graph TB
 2. How should they be organized?
 3. What variables should be configurable?
 4. What outputs would be useful?
-
+-->
 
 ## Key Takeaways
 

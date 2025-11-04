@@ -120,7 +120,7 @@ gitGraph
     checkout develop
     merge hotfix/security
 ```
-
+<!--
 ### Environment-Based Branching
 
 ```mermaid
@@ -143,8 +143,11 @@ graph TB
     B --> H
     C --> I
 ```
+-->
 
 ## Pull Request (PR) Workflow
+
+A pull request is a method of submitting contributions to a project. It allows team members to review code changes before merging them into the main branch.
 
 ### The PR Process for Infrastructure Changes
 
@@ -380,6 +383,33 @@ graph TB
     end
 ```
 
+### Common Git Mistakes and Solutions
+
+```mermaid
+graph TB
+    subgraph "Common Mistakes"
+        A[Committing secrets]
+        B[Large binary files]
+        C[Direct commits to main]
+        D[Unclear commit messages]
+        E[Not syncing branches]
+    end
+
+    subgraph "Solutions"
+        F[Use .gitignore + secrets management]
+        G[Git LFS or external storage]
+        H[Branch protection rules]
+        I[Commit message conventions]
+        J[Regular git pull/fetch]
+    end
+
+    A --> F
+    B --> G
+    C --> H
+    D --> I
+    E --> J
+```
+<!--
 ## GitHub vs Azure DevOps Comparison
 
 | Feature | GitHub | Azure DevOps |
@@ -391,6 +421,7 @@ graph TB
 | **Package Management** | GitHub Packages | Azure Artifacts |
 | **Enterprise Integration** | GitHub Enterprise | Native Azure integration |
 | **Cost** | Free for public repos | Free tier available |
+-->
 
 ## Exercise: Git Workflow Simulation
 
@@ -503,39 +534,6 @@ resource "azurerm_storage_account" "example" {
 - What issues do you see?
 - How could this be improved?
 - What's missing for production readiness?
-
-## Common Git Mistakes and Solutions
-
-```mermaid
-graph TB
-    subgraph "Common Mistakes"
-        A[Committing secrets]
-        B[Large binary files]
-        C[Direct commits to main]
-        D[Unclear commit messages]
-        E[Not syncing branches]
-    end
-
-    subgraph "Solutions"
-        F[Use .gitignore + secrets management]
-        G[Git LFS or external storage]
-        H[Branch protection rules]
-        I[Commit message conventions]
-        J[Regular git pull/fetch]
-    end
-
-    A --> F
-    B --> G
-    C --> H
-    D --> I
-    E --> J
-```
-
-## Discussion Questions
-
-1. **For Managers**: How can proper Git workflows improve compliance and audit capabilities?
-2. **For Technical Teams**: What challenges have you faced with infrastructure change management?
-3. **For Everyone**: How do you balance speed of delivery with proper review processes?
 
 ## Key Takeaways
 

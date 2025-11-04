@@ -194,33 +194,6 @@ graph TB
     D --> H
 ```
 
-<!--
-## Azure DevOps Ecosystem
-
-```mermaid
-graph TB
-    subgraph "Azure DevOps Services"
-        A[Azure Repos]
-        B[Azure Pipelines]
-        C[Azure Boards]
-        D[Azure Test Plans]
-        E[Azure Artifacts]
-    end
-
-    subgraph "Integration Points"
-        F[GitHub]
-        G[Visual Studio]
-        H[VS Code]
-        I[Third-party Tools]
-    end
-
-    A <--> F
-    B <--> G
-    C <--> H
-    D <--> I
-```
--->
-
 ## Common DevOps Metrics
 
 | Metric | Description | Target |
@@ -229,12 +202,6 @@ graph TB
 | **Deployment Frequency** | How often deployments occur | Multiple times per day |
 | **Mean Time to Recovery (MTTR)** | Time to recover from failures | < 1 hour |
 | **Change Failure Rate** | Percentage of deployments causing failures | < 15% |
-
-## Discussion Questions
-
-1. **For Managers**: How can DevOps principles help your team respond faster to business requirements?
-2. **For Technical Teams**: What are the biggest barriers to implementing DevOps in your current projects?
-3. **For Everyone**: How do you measure success in your current development and deployment processes?
 
 ## Exercise: DevOps Maturity Assessment
 

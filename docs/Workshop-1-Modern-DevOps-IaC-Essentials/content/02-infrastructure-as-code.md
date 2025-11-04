@@ -148,6 +148,8 @@ graph TD
     - **Risk decreases** through reduced manual errors and faster recovery capabilities.
     - **Compliance becomes automated** - security policies are enforced through code, not hope.
 
+
+<!--
 ```mermaid
 mindmap
   root((IaC Benefits))
@@ -165,6 +167,7 @@ mindmap
       Audit Trail
       Compliance
 ```
+-->
 
 ## IaC Tools Landscape
 
@@ -342,12 +345,6 @@ graph TB
     H --> I
 ```
 
-## Discussion Questions
-
-1. **For Managers**: How could IaC help with cost management and resource governance in your organization?
-2. **For Technical Teams**: What challenges do you face with manual infrastructure provisioning?
-3. **For Everyone**: How do you currently handle environment consistency between development and production?
-
 ## Exercise: IaC Benefits Analysis
 
 ### Scenario Analysis (10 minutes)
@@ -368,12 +365,6 @@ Your organization needs to:
 | **Consistency guarantee** | Yes/No | Yes/No |
 | **Cost tracking** | Easy/Hard | Easy/Hard |
 | **Compliance validation** | Manual/Automated | Manual/Automated |
-
-### Group Discussion
-
-- Which approach better serves business needs?
-- What are the main obstacles to adopting IaC?
-- How would you measure success?
 
 ## Real-World Example: E-commerce Platform
 
