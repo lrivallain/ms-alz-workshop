@@ -2,21 +2,12 @@
     "name": "DevOps & IaC Workshop",
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
     "features": {
-        "ghcr.io/devcontainers/features/git:1": {
-            "ppa": true,
-            "version": "latest"
-        },
-        "ghcr.io/devcontainers/features/azure-cli:1": {
-            "version": "latest",
-            "installBicep": false
-        },
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/azure-cli:1": {},
         "ghcr.io/devcontainers/features/terraform:1": {},
-        "ghcr.io/devcontainers/features/node:1": {
-            "version": "lts",
-            "nodeGypDependencies": true
-        },
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/python:1": {},
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+        "ghcr.io/devcontainers-extra/features/uv": {}
     },
     "customizations": {
         "vscode": {

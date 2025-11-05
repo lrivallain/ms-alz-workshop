@@ -3,7 +3,7 @@
 
 set -e
 
-echo "🚀 Setting up ALZ Workshop Development Environment..."
+echo "🚀 Setting up DevOps & IaC Workshop Development Environment..."
 
 # Colors for output
 RED='\033[0;31m'
@@ -107,26 +107,26 @@ echo "  Terraform: $(terraform version 2>/dev/null | head -1 || echo 'NOT INSTAL
 
 # Create helpful aliases
 print_status "Setting up helpful aliases..."
-cat >> /home/vscode/.bashrc << 'EOF'
+cat >> /home/vscode/.zshrc << 'EOF'
 # Workshop specific
 alias workshop='cd /workspaces/terraform-workshop'
 alias lab='cd /workspaces/terraform-workshop/terraform'
+alias gitconfig='bash /workspaces/ms-alz-workshop/.devcontainer/setup-git.sh'
 
-echo "🎓 ALZ Workshop Environment Ready!"
+echo "🎓 DevOps & IaC Workshop Environment Ready!"
 echo "💡 Tips:"
 echo "   - Run 'workshop' to go to workshop directory"
 echo "   - Run 'lab' to go to terraform directory"
-echo "   - Configure git with: git config --global user.name 'Your Name'"
-echo "   - Configure git with: git config --global user.email 'your@email.com'"
+echo "   - Run 'gitconfig' to set up git configuration"
 EOF
 
 # Set ownership for home and workspaces if not already set
 sudo chown -R vscode:vscode /home/vscode
 sudo chown -R vscode:vscode /workspaces 2>/dev/null || true
 
-print_success "🎉 ALZ Workshop Development Environment setup complete!"
+print_success "🎉 DevOps & IaC Workshop Development Environment setup complete!"
 print_status "🔧 Next steps:"
-echo "   1. Configure Git with your name and email"
+echo "   1. Configure Git with your name and email: gitconfig"
 echo "   2. Login to Azure CLI: az login"
 echo "   3. Set your default subscription: az account set --subscription 'Your Subscription'"
 echo "   4. Start with the workshop materials!"
@@ -135,7 +135,7 @@ echo "   4. Start with the workshop materials!"
 cat << 'EOF'
 
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                   🚀 ALZ Workshop Environment Ready! 🚀                      ║
+║              🚀 DevOps & IaC Workshop Environment Ready! 🚀                  ║
 ║                                                                              ║
 ║  This devcontainer includes:                                                 ║
 ║  ✅ Git, Azure CLI, Terraform, Node.js                                       ║
@@ -145,7 +145,7 @@ cat << 'EOF'
 ║                                                                              ║
 ║  Quick start:                                                                ║
 ║  • Run 'workshop' to navigate to workshop directory                          ║
-║  • Configure Git: git config --global user.name "Your Name"                  ║
+║  • Run 'gitconfig' to set up git configuration                               ║
 ║  • Login to Azure: az login                                                  ║
 ║  • Set your sub: az account set --subscription 'Your Subscription'.          ║
 ║                                                                              ║
