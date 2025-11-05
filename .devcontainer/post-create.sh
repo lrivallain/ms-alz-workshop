@@ -53,6 +53,10 @@ print_status "Creating Terraform plugin cache directory..."
 mkdir -p /tmp/terraform-plugin-cache
 sudo chown -R vscode:vscode /tmp/terraform-plugin-cache
 
+# Ensure /workspaces ownership
+print_status "Setting ownership for /workspaces..."
+sudo chown -R vscode:vscode /workspaces 2>/dev/null || true
+
 # Configure Terraform CLI config
 print_status "Configuring Terraform CLI..."
 cat > /workspaces/.terraformrc << 'EOF'
@@ -116,7 +120,7 @@ echo "   - Configure git with: git config --global user.name 'Your Name'"
 echo "   - Configure git with: git config --global user.email 'your@email.com'"
 EOF
 
-# Set ownership
+# Set ownership for home and workspaces if not already set
 sudo chown -R vscode:vscode /home/vscode
 sudo chown -R vscode:vscode /workspaces 2>/dev/null || true
 
