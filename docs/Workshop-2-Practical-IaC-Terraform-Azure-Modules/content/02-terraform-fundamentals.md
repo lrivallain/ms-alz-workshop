@@ -131,7 +131,7 @@ tags = {
 }
 ```
 
-**Create staging environment variables**:
+**Create prod environment variables**:
 
 ```terraform
 # terraform/environments/prod/terraform.tfvars
@@ -166,7 +166,7 @@ tags = {
 }
 ```
 
-**Create production environment variables**:
+**Create staging environment variables**:
 
 ```terraform
 # terraform/environments/staging/terraform.tfvars
@@ -746,9 +746,10 @@ resource "azurerm_key_vault_secret" "sql_password" {
 
 !!! note "Add your IP addresses"
 
-    Ensure to add your current IP address where indicated by the following comment: `# Add your IP addresses`
+  Ensure to add your current IP address where indicated by the following comment: `# Add your IP addresses` => from terminal that will execute terraform: curl ifconfig.me
 
-    Same for `# Add admin email addresses` in the SQL Database threat detection policy.
+  Same for `# Add admin email addresses` in the SQL Database threat detection policy.
+
 ---
 
 ## Part 4: Enhanced Outputs Configuration
