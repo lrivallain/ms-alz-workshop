@@ -131,7 +131,7 @@ tags = {
 }
 ```
 
-**Create staging environment variables**:
+**Create prod environment variables**:
 
 ```terraform
 # terraform/environments/prod/terraform.tfvars
@@ -166,7 +166,7 @@ tags = {
 }
 ```
 
-**Create production environment variables**:
+**Create staging environment variables**:
 
 ```terraform
 # terraform/environments/staging/terraform.tfvars
