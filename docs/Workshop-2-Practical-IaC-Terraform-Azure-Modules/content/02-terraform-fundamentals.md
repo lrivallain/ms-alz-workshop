@@ -746,9 +746,10 @@ resource "azurerm_key_vault_secret" "sql_password" {
 
 !!! note "Add your IP addresses"
 
-    Ensure to add your current IP address where indicated by the following comment: `# Add your IP addresses`
+  Ensure to add your current IP address where indicated by the following comment: `# Add your IP addresses` => from terminal that will execute terraform: curl ifconfig.me
 
-    Same for `# Add admin email addresses` in the SQL Database threat detection policy.
+  Same for `# Add admin email addresses` in the SQL Database threat detection policy.
+
 ---
 
 ## Part 4: Enhanced Outputs Configuration
