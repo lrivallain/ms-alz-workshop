@@ -192,7 +192,7 @@ resource "azurerm_linux_web_app" "main" {
 
 # SQL Server
 resource "azurerm_mssql_server" "main" {
-  name                = "sql-${local.resource_prefix}-${local.unique_suffix}"
+  name                = "sql-${local.resource_prefix}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
 
