@@ -46,13 +46,13 @@ module "storage_account_main" {
     }
   }
 
-  # Network rules (restrictive by default)
-  network_rules = {
-    bypass                     = ["AzureServices"]
-    default_action             = "Deny"
-    ip_rules                   = ["82.65.43.153"]
-    virtual_network_subnet_ids = []
-  }
+  # # Network rules (restrictive by default)
+  # network_rules = {
+  #   bypass                     = ["AzureServices"]
+  #   default_action             = "Deny"
+  #   ip_rules                   = ["82.65.43.153"]
+  #   virtual_network_subnet_ids = []
+  # }
 
   tags = merge(local.common_tags, {
     Component = "Storage"
@@ -246,16 +246,6 @@ resource "azurerm_mssql_database" "main" {
   auto_pause_delay_in_minutes = local.environment_config.is_development ? 60 : 120
   min_capacity                = local.environment_config.is_development ? 0.5 : 1
 
-  # Threat detection policy
-  # threat_detection_policy {
-  #   state                      = "Enabled"
-  #   email_account_admins       = "Enabled"
-  #   email_addresses            = [ "admin@example.com" ] # Add admin email addresses
-  #   retention_days             = 30
-  #   storage_account_access_key = azurerm_storage_account.main.primary_access_key
-  #   storage_endpoint           = azurerm_storage_account.main.primary_blob_endpoint
-  # }
-
   tags = merge(local.common_tags, {
     Component = "Database"
     Service   = "SQLDatabase"
@@ -287,15 +277,8 @@ resource "azurerm_key_vault" "main" {
   public_network_access_enabled   = true
 
   # Purge protection for production
-  purge_protection_enabled   = local.environment_config.is_production
-  soft_delete_retention_days = local.environment_config.is_production ? 90 : 7
-
-  # Network access rules
-  network_acls {
-    default_action = "Allow" # Change to "Deny" and configure exceptions in production
-    bypass         = "AzureServices"
-    ip_rules       = ["82.65.43.153"] # Add your IP addresses
-  }
+  purge_protection_enabled   = false
+  soft_delete_retention_days = 7
 
   tags = merge(local.common_tags, {
     Component = "Security"
