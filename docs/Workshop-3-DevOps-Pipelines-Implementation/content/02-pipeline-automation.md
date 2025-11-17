@@ -81,6 +81,8 @@ The current workflow does not use any backend configuration for Terraform state 
 
 We will now update the workflow to use an Azure Storage Account as a backend for Terraform state management.
 
+### Configure the workflow
+
 Edit the workflow file `.github/workflows/terraform-ci-cd.yml` to update the `Terraform Init` step to include backend configuration:
 
 ```yaml
@@ -96,6 +98,19 @@ Edit the workflow file `.github/workflows/terraform-ci-cd.yml` to update the `Te
       working-directory: ./terraform
     # ...
 ```
+
+### Configure backend for state management
+
+Edit `terraform/versions.tf` to add the backend configuration in the `terraform` block:
+
+```
+  backend "azurerm" {
+    use_azuread_auth = true
+  }
+```
+
+Refer to HashiCorp documentation for more details: [Configure the AzureRM backend for Terraform](https://developer.hashicorp.com/terraform/language/backend/azurerm).
+
 
 ## Deployment Pipeline
 
