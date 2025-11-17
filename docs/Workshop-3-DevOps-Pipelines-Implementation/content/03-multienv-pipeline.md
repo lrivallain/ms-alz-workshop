@@ -596,6 +596,13 @@ In your GitHub repository:
     - **Protection rules** → ✅ Required reviewers
     - Add yourself (or team members) as **required reviewers**
 
+??? Note: "GitHub environments may be limited in features based on your repository plan (free vs paid)."
+
+    Depending on your GitHub plan, some features of environments (like required reviewers) may not be available.
+
+    For the purposes of this lab, we will assume these features are available in your repository, if not, you can
+    change the repository publishing model to "public" to enable them.
+
 In our case, no environment secrets or variables are needed as we are using repository-level secrets and variables.
 
 (Optional for the lab) Protect the `main` branch by enabling branch protection rules to require pull request reviews before merging:
