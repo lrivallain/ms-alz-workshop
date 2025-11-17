@@ -596,7 +596,7 @@ In your GitHub repository:
     - **Protection rules** → ✅ Required reviewers
     - Add yourself (or team members) as **required reviewers**
 
-??? Note: "GitHub environments may be limited in features based on your repository plan (free vs paid)."
+??? note "GitHub environments may be limited in features based on your repository plan (free vs paid)."
 
     Depending on your GitHub plan, some features of environments (like required reviewers) may not be available.
 
