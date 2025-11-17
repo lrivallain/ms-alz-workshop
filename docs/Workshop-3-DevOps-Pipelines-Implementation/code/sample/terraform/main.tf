@@ -12,7 +12,7 @@ module "storage_account_main" {
   version = "0.6.4"
 
   location                 = azurerm_resource_group.main.location
-  name                     = "st${replace(local.resource_prefix, "-", "")}${local.unique_suffix}"
+  name                     = "st${replace(local.resource_prefix, "-", "")}"
   resource_group_name      = azurerm_resource_group.main.name
   account_kind             = "StorageV2"
   account_replication_type = var.storage_replication_type
@@ -45,14 +45,6 @@ module "storage_account_main" {
       days = var.storage_blob_retention_days
     }
   }
-
-  # # Network rules (restrictive by default)
-  # network_rules = {
-  #   bypass                     = ["AzureServices"]
-  #   default_action             = "Deny"
-  #   ip_rules                   = ["82.65.43.153"]
-  #   virtual_network_subnet_ids = []
-  # }
 
   tags = merge(local.common_tags, {
     Component = "Storage"
@@ -118,7 +110,7 @@ resource "azurerm_service_plan" "main" {
 
 # Web App
 resource "azurerm_linux_web_app" "main" {
-  name                = "app-${local.resource_prefix}-${local.unique_suffix}"
+  name                = "app-${local.resource_prefix}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_service_plan.main.location
   service_plan_id     = azurerm_service_plan.main.id
@@ -262,7 +254,7 @@ resource "azurerm_mssql_firewall_rule" "azure_services" {
 
 # Key Vault for secrets management
 resource "azurerm_key_vault" "main" {
-  name                = "kv-${local.resource_prefix}-${local.unique_suffix}"
+  name                = "kv-${local.resource_prefix}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
