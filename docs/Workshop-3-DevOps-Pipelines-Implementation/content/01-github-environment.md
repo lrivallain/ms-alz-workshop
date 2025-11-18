@@ -328,19 +328,9 @@ Create a blob container in the storage account to store the Terraform state:
 az storage container create \
   --name iac-workshop-tfstates \
   --account-name "tfstates$RANDOM_SUFFIX" \
-  --public-access off
+  --public-access off \
+  --auth-mode login
 ```
-
-#### Configure backend for state management
-
-Edit `terraform/versions.tf` to add the backend configuration in the `terraform` block:
-
-```
-  backend "azurerm" {}
-```
-
-Refer to HashiCorp documentation for more details: [Configure the AzureRM backend for Terraform](https://developer.hashicorp.com/terraform/language/backend/azurerm).
-
 
 ---
 

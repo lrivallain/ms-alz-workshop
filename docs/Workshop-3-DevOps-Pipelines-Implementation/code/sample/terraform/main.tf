@@ -12,7 +12,7 @@ module "storage_account_main" {
   version = "0.6.4"
 
   location                 = azurerm_resource_group.main.location
-  name                     = "st${replace(local.resource_prefix, "-", "")}${local.unique_suffix}"
+  name                     = "st${replace(local.resource_prefix, "-", "")}"
   resource_group_name      = azurerm_resource_group.main.name
   account_kind             = "StorageV2"
   account_replication_type = var.storage_replication_type
@@ -44,14 +44,6 @@ module "storage_account_main" {
     container_delete_retention_policy = {
       days = var.storage_blob_retention_days
     }
-  }
-
-  # Network rules (restrictive by default)
-  network_rules = {
-    bypass                     = ["AzureServices"]
-    default_action             = "Deny"
-    ip_rules                   = ["82.65.43.153"]
-    virtual_network_subnet_ids = []
   }
 
   tags = merge(local.common_tags, {
@@ -118,7 +110,7 @@ resource "azurerm_service_plan" "main" {
 
 # Web App
 resource "azurerm_linux_web_app" "main" {
-  name                = "app-${local.resource_prefix}-${local.unique_suffix}"
+  name                = "app-${local.resource_prefix}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_service_plan.main.location
   service_plan_id     = azurerm_service_plan.main.id
@@ -200,7 +192,7 @@ resource "azurerm_linux_web_app" "main" {
 
 # SQL Server
 resource "azurerm_mssql_server" "main" {
-  name                = "sql-${local.resource_prefix}-${local.unique_suffix}"
+  name                = "sql-${local.resource_prefix}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
 
@@ -246,16 +238,6 @@ resource "azurerm_mssql_database" "main" {
   auto_pause_delay_in_minutes = local.environment_config.is_development ? 60 : 120
   min_capacity                = local.environment_config.is_development ? 0.5 : 1
 
-  # Threat detection policy
-  # threat_detection_policy {
-  #   state                      = "Enabled"
-  #   email_account_admins       = "Enabled"
-  #   email_addresses            = [ "admin@example.com" ] # Add admin email addresses
-  #   retention_days             = 30
-  #   storage_account_access_key = azurerm_storage_account.main.primary_access_key
-  #   storage_endpoint           = azurerm_storage_account.main.primary_blob_endpoint
-  # }
-
   tags = merge(local.common_tags, {
     Component = "Database"
     Service   = "SQLDatabase"
@@ -272,7 +254,7 @@ resource "azurerm_mssql_firewall_rule" "azure_services" {
 
 # Key Vault for secrets management
 resource "azurerm_key_vault" "main" {
-  name                = "kv-${local.resource_prefix}-${local.unique_suffix}"
+  name                = "kv-${local.resource_prefix}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
@@ -287,15 +269,8 @@ resource "azurerm_key_vault" "main" {
   public_network_access_enabled   = true
 
   # Purge protection for production
-  purge_protection_enabled   = local.environment_config.is_production
-  soft_delete_retention_days = local.environment_config.is_production ? 90 : 7
-
-  # Network access rules
-  network_acls {
-    default_action = "Allow" # Change to "Deny" and configure exceptions in production
-    bypass         = "AzureServices"
-    ip_rules       = ["82.65.43.153"] # Add your IP addresses
-  }
+  purge_protection_enabled   = false
+  soft_delete_retention_days = 7
 
   tags = merge(local.common_tags, {
     Component = "Security"
