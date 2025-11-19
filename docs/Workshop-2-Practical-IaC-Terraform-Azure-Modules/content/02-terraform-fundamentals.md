@@ -408,11 +408,11 @@ resource "azurerm_resource_group" "main" {
 resource "azurerm_storage_account" "main" {
   name                = "st${replace(local.resource_prefix, "-", "")}"
   resource_group_name = azurerm_resource_group.main.name
-  location           = azurerm_resource_group.main.location
+  location            = azurerm_resource_group.main.location
 
   account_tier             = "Standard"
   account_replication_type = var.storage_replication_type
-  account_kind            = "StorageV2"
+  account_kind             = "StorageV2"
 
   # Security settings
   public_network_access_enabled   = false
@@ -460,8 +460,8 @@ resource "azurerm_storage_account" "main" {
 
 # Log Analytics Workspace
 resource "azurerm_log_analytics_workspace" "main" {
-  name               = "log-${local.resource_prefix}"
-  location           = azurerm_resource_group.main.location
+  name                = "log-${local.resource_prefix}"
+  location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
   sku               = "PerGB2018"
@@ -532,13 +532,13 @@ resource "azurerm_linux_web_app" "main" {
     }
 
     # Security settings
-    http2_enabled                   = true
-    minimum_tls_version             = local.environment_config.security.min_tls_version
-    scm_minimum_tls_version         = local.environment_config.security.min_tls_version
-    ftps_state                      = "FtpsOnly"
+    http2_enabled           = true
+    minimum_tls_version     = local.environment_config.security.min_tls_version
+    scm_minimum_tls_version = local.environment_config.security.min_tls_version
+    ftps_state              = "FtpsOnly"
 
     # Health check
-    health_check_path                = "/health"
+    health_check_path                 = "/health"
     health_check_eviction_time_in_min = 2
 
     # CORS settings (configure as needed)
@@ -570,11 +570,11 @@ resource "azurerm_linux_web_app" "main" {
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.main.connection_string
 
     # Database connection (will be added after SQL resources)
-    DATABASE_SERVER = azurerm_mssql_server.main.fully_qualified_domain_name
-    DATABASE_NAME   = azurerm_mssql_database.main.name
+    DATABASE_SERVER   = azurerm_mssql_server.main.fully_qualified_domain_name
+    DATABASE_NAME     = azurerm_mssql_database.main.name
     DATABASE_USERNAME = var.admin_username
     # The application will fetch the password from Key Vault using its Managed Identity
-    KEY_VAULT_URI   = azurerm_key_vault.main.vault_uri
+    KEY_VAULT_URI = azurerm_key_vault.main.vault_uri
   }
 
   # Managed identity for secure access
@@ -615,7 +615,7 @@ resource "azurerm_mssql_server" "main" {
     login_username              = data.azurerm_client_config.current.object_id
     object_id                   = data.azurerm_client_config.current.object_id
     tenant_id                   = data.azurerm_client_config.current.tenant_id
-    azuread_authentication_only = false # Set to true after setting up Azure AD users
+    azuread_authentication_only = true # Set to true after setting up Azure AD users
   }
 
   tags = merge(local.common_tags, {
@@ -641,18 +641,8 @@ resource "azurerm_mssql_database" "main" {
   }
 
   # Maintenance and performance
-  auto_pause_delay_in_minutes = local.environment_config.is_development ? 60  : 120
+  auto_pause_delay_in_minutes = local.environment_config.is_development ? 60 : 120
   min_capacity                = local.environment_config.is_development ? 0.5 : 1
-
-  # Threat detection policy
-  threat_detection_policy {
-    state                  = "Enabled"
-    email_account_admins   = "Enabled"
-    email_addresses       = [ ] # Add admin email addresses
-    retention_days        = 30
-    storage_account_access_key = azurerm_storage_account.main.primary_access_key
-    storage_endpoint      = azurerm_storage_account.main.primary_blob_endpoint
-  }
 
   tags = merge(local.common_tags, {
     Component = "Database"
@@ -685,15 +675,8 @@ resource "azurerm_key_vault" "main" {
   public_network_access_enabled   = true # Set to false and configure private endpoints for production
 
   # Purge protection for production
-  purge_protection_enabled = local.environment_config.is_production
+  purge_protection_enabled   = local.environment_config.is_production
   soft_delete_retention_days = local.environment_config.is_production ? 90 : 7
-
-  # Network access rules
-  network_acls {
-    default_action = "Deny"
-    bypass         = "AzureServices"
-    ip_rules       = [] # Add your IP addresses
-  }
 
   tags = merge(local.common_tags, {
     Component = "Security"
@@ -701,30 +684,18 @@ resource "azurerm_key_vault" "main" {
   })
 }
 
-# Key Vault access policy for current user/service principal
-resource "azurerm_key_vault_access_policy" "current_user" {
-  key_vault_id = azurerm_key_vault.main.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
-
-  secret_permissions = [
-    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
-  ]
-
-  key_permissions = [
-    "Get", "List", "Create", "Delete", "Recover", "Backup", "Restore", "Purge"
-  ]
+# RBAC role assignment for current user/service principal - Key Vault Administrator
+resource "azurerm_role_assignment" "current_user_kv_admin" {
+  scope                = azurerm_key_vault.main.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
-# Key Vault access policy for Web App managed identity
-resource "azurerm_key_vault_access_policy" "webapp" {
-  key_vault_id = azurerm_key_vault.main.id
-  tenant_id    = azurerm_linux_web_app.main.identity[0].tenant_id
-  object_id    = azurerm_linux_web_app.main.identity[0].principal_id
-
-  secret_permissions = [
-    "Get", "List"
-  ]
+# RBAC role assignment for current user/service principal - Key Vault Secrets Officer (for setting secrets)
+resource "azurerm_role_assignment" "current_user_kv_secrets_officer" {
+  scope                = azurerm_key_vault.main.id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
 # Store SQL password in Key Vault
@@ -734,7 +705,8 @@ resource "azurerm_key_vault_secret" "sql_password" {
   key_vault_id = azurerm_key_vault.main.id
 
   depends_on = [
-    azurerm_key_vault_access_policy.current_user
+    azurerm_role_assignment.current_user_kv_admin,
+    azurerm_role_assignment.current_user_kv_secrets_officer
   ]
 
   tags = merge(local.common_tags, {
@@ -742,13 +714,14 @@ resource "azurerm_key_vault_secret" "sql_password" {
     Service   = "Secret"
   })
 }
+
+# RBAC role assignment for Web App managed identity - Key Vault Secrets User (scoped to specific secret)
+resource "azurerm_role_assignment" "webapp_kv_secrets_user" {
+  scope                = azurerm_key_vault_secret.sql_password.resource_versionless_id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_linux_web_app.main.identity[0].principal_id
+}
 ```
-
-!!! note "Add your IP addresses"
-
-  Ensure to add your current IP address where indicated by the following comment: `# Add your IP addresses` => from terminal that will execute terraform: curl ifconfig.me
-
-  Same for `# Add admin email addresses` in the SQL Database threat detection policy.
 
 ---
 
