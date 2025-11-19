@@ -7,43 +7,52 @@ resource "azurerm_resource_group" "main" {
   tags = local.common_tags
 }
 
-module "storage_account_main" {
-  source  = "Azure/avm-res-storage-storageaccount/azurerm"
-  version = "0.6.4"
+# Storage Account
+resource "azurerm_storage_account" "main" {
+  name                = "st${replace(local.resource_prefix, "-", "")}"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
 
-  location                 = azurerm_resource_group.main.location
-  name                     = "st${replace(local.resource_prefix, "-", "")}"
-  resource_group_name      = azurerm_resource_group.main.name
-  account_kind             = "StorageV2"
-  account_replication_type = var.storage_replication_type
   account_tier             = "Standard"
+  account_replication_type = var.storage_replication_type
+  account_kind             = "StorageV2"
 
   # Security settings
-  public_network_access_enabled = false
-  # allow_nested_items_to_be_public = false
-  shared_access_key_enabled  = true
-  https_traffic_only_enabled = true
-  min_tls_version            = "TLS1_2"
+  public_network_access_enabled   = false
+  allow_nested_items_to_be_public = false
+  shared_access_key_enabled       = true
+  https_traffic_only_enabled      = true
+  min_tls_version                 = "TLS1_2"
 
   # Infrastructure encryption for production
   infrastructure_encryption_enabled = local.environment_config.is_production
 
   # Blob properties
-  blob_properties = {
+  blob_properties {
     # Enable versioning
     versioning_enabled = true
+
     # Change feed for audit trail
     change_feed_enabled = local.environment_config.is_production
 
     # Retention policy
-    delete_retention_policy = {
+    delete_retention_policy {
       days = var.storage_blob_retention_days
     }
 
     # Container retention policy
-    container_delete_retention_policy = {
+    container_delete_retention_policy {
       days = var.storage_blob_retention_days
     }
+  }
+
+  # Network rules (restrictive by default)
+  network_rules {
+    default_action = "Deny"
+    ip_rules       = [] # Add your IP addresses as needed
+
+    # Allow access from the same virtual network (when implemented)
+    virtual_network_subnet_ids = []
   }
 
   tags = merge(local.common_tags, {
@@ -157,7 +166,7 @@ resource "azurerm_linux_web_app" "main" {
     WEBSITE_ENABLE_SYNC_UPDATE_SITE = "true"
 
     # Storage connection
-    STORAGE_CONNECTION_STRING = module.storage_account_main.resource.primary_connection_string
+    STORAGE_CONNECTION_STRING = azurerm_storage_account.main.primary_connection_string
 
     # Application Insights
     APPINSIGHTS_INSTRUMENTATIONKEY        = azurerm_application_insights.main.instrumentation_key
@@ -209,7 +218,7 @@ resource "azurerm_mssql_server" "main" {
     login_username              = data.azurerm_client_config.current.object_id
     object_id                   = data.azurerm_client_config.current.object_id
     tenant_id                   = data.azurerm_client_config.current.tenant_id
-    azuread_authentication_only = false # Set to true after setting up Azure AD users
+    azuread_authentication_only = true # Set to true after setting up Azure AD users
   }
 
   tags = merge(local.common_tags, {
@@ -265,12 +274,12 @@ resource "azurerm_key_vault" "main" {
   enabled_for_disk_encryption     = true
   enabled_for_deployment          = true
   enabled_for_template_deployment = true
-  rbac_authorization_enabled      = false
-  public_network_access_enabled   = true
+  rbac_authorization_enabled      = true
+  public_network_access_enabled   = true # Set to false and configure private endpoints for production
 
   # Purge protection for production
-  purge_protection_enabled   = false
-  soft_delete_retention_days = 7
+  purge_protection_enabled   = local.environment_config.is_production
+  soft_delete_retention_days = local.environment_config.is_production ? 90 : 7
 
   tags = merge(local.common_tags, {
     Component = "Security"
@@ -278,30 +287,18 @@ resource "azurerm_key_vault" "main" {
   })
 }
 
-# Key Vault access policy for current user/service principal
-resource "azurerm_key_vault_access_policy" "current_user" {
-  key_vault_id = azurerm_key_vault.main.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
-
-  secret_permissions = [
-    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
-  ]
-
-  key_permissions = [
-    "Get", "List", "Create", "Delete", "Recover", "Backup", "Restore", "Purge"
-  ]
+# RBAC role assignment for current user/service principal - Key Vault Administrator
+resource "azurerm_role_assignment" "current_user_kv_admin" {
+  scope                = azurerm_key_vault.main.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
-# Key Vault access policy for Web App managed identity
-resource "azurerm_key_vault_access_policy" "webapp" {
-  key_vault_id = azurerm_key_vault.main.id
-  tenant_id    = azurerm_linux_web_app.main.identity[0].tenant_id
-  object_id    = azurerm_linux_web_app.main.identity[0].principal_id
-
-  secret_permissions = [
-    "Get", "List"
-  ]
+# RBAC role assignment for current user/service principal - Key Vault Secrets Officer (for setting secrets)
+resource "azurerm_role_assignment" "current_user_kv_secrets_officer" {
+  scope                = azurerm_key_vault.main.id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
 # Store SQL password in Key Vault
@@ -311,11 +308,19 @@ resource "azurerm_key_vault_secret" "sql_password" {
   key_vault_id = azurerm_key_vault.main.id
 
   depends_on = [
-    azurerm_key_vault_access_policy.current_user
+    azurerm_role_assignment.current_user_kv_admin,
+    azurerm_role_assignment.current_user_kv_secrets_officer
   ]
 
   tags = merge(local.common_tags, {
     Component = "Security"
     Service   = "Secret"
   })
+}
+
+# RBAC role assignment for Web App managed identity - Key Vault Secrets User (scoped to specific secret)
+resource "azurerm_role_assignment" "webapp_kv_secrets_user" {
+  scope                = azurerm_key_vault_secret.sql_password.resource_versionless_id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_linux_web_app.main.identity[0].principal_id
 }
