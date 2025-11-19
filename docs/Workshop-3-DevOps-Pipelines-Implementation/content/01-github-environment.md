@@ -258,33 +258,36 @@ In future workflows, you will use the following action to log in:
     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 ```
 
+??? tip "Alternative authentication option"
 
-#### Alternative Option 2: Service Principal with Secrets (Legacy)
+    Use this method only if OIDC is not feasible in your environment.
 
-If you are unable to use OIDC, you can create a service principal with a client secret.
+    #### Alternative Option 2: Service Principal with Secrets (Legacy)
 
-```bash
-# Choose a unique trigram (could be your initials)
-export TRIGRAM="XXX"
+    If you are unable to use OIDC, you can create a service principal with a client secret.
 
-# Create service principal with secret
-az ad sp create-for-rbac \
-  --name "sp-gh-actions-terraform-$TRIGRAM" \
-  --role "Contributor" \
-  --scopes "/subscriptions/<subscription-id>" \
-  --sdk-auth
-```
+    ```bash
+    # Choose a unique trigram (could be your initials)
+    export TRIGRAM="XXX"
 
-Add JSON output as GitHub secret: AZURE_CREDENTIALS (Settings → Secrets and variables → Actions → Repository secrets).
+    # Create service principal with secret
+    az ad sp create-for-rbac \
+      --name "sp-gh-actions-terraform-$TRIGRAM" \
+      --role "Contributor" \
+      --scopes "/subscriptions/<subscription-id>" \
+      --sdk-auth
+    ```
 
-In future workflows, use the following action to log in:
+    Add JSON output as GitHub secret: AZURE_CREDENTIALS (Settings → Secrets and variables → Actions → Repository secrets).
 
-```yaml
-- name: Azure Login
-  uses: azure/login@v2
-  with:
-    creds: ${{ secrets.AZURE_CREDENTIALS }}
-```
+    In future workflows, use the following action to log in:
+
+    ```yaml
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    ```
 
 #### State Management Setup
 
