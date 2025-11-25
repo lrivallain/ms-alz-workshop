@@ -393,7 +393,7 @@ terraform {
       version = "~> 3.1"
     }
   }
-  
+
 }
 
 provider "azurerm" {
@@ -403,8 +403,14 @@ provider "azurerm" {
     }
   }
   storage_use_azuread = true
+  subscription_id     = "UPDATE_WITH_YOUR_SUBSCRIPTION_ID"
 }
 ```
+
+!!! warning
+
+    Make sure to replace `UPDATE_WITH_YOUR_SUBSCRIPTION_ID` with your actual Azure Subscription ID where resources will be deployed.
+
 
 **Create variables.tf**:
 
