@@ -19,6 +19,7 @@ theme:
 
 plugins:
   - search
+  - print-site
 
 markdown_extensions:
   - pymdownx.superfences:
